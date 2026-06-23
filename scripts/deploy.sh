@@ -53,9 +53,9 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
-          username:'ngawur'
+          username:'root'
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.VPS_PORT }} # <-- KUNCI UTAMA UNTUK NAT VPS
+          port: 35571 # <-- KUNCI UTAMA UNTUK NAT VPS
           script_stop: true # <-- Pengganti 'set -e', jika ada command yang gagal, proses langsung stop
           script: |
             echo "========== Deploying Cat House CMS =========="
