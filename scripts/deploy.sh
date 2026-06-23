@@ -6,6 +6,12 @@ cd /var/www/cat-house-cms
 
 git pull origin main
 
+# Create storage directories if missing
+mkdir -p backend/storage/framework/views
+mkdir -p backend/storage/framework/cache
+mkdir -p backend/storage/framework/sessions
+chmod -R 775 backend/storage/framework
+
 # Backend
 echo ""
 echo "--- Backend ---"
@@ -25,8 +31,8 @@ npm run build
 # Restart services
 echo ""
 echo "--- Restart Services ---"
-sudo systemctl reload php8.2-fpm
-sudo supervisorctl restart cat-house-worker:*
+systemctl reload php8.2-fpm
+supervisorctl restart cat-house-worker:*
 
 echo ""
 echo "========== Deploy Complete =========="

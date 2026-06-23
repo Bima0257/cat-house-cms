@@ -1,6 +1,4 @@
 #!/bin/bash
-set -e
-
 export DEBIAN_FRONTEND=noninteractive
 export TZ=Asia/Jakarta
 
@@ -8,12 +6,16 @@ echo "========== Cat House CMS — VPS Setup =========="
 
 # 1. Set timezone & system update
 ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
-apt update && apt upgrade -y
+apt update
+apt upgrade -y || true
 
-# 2. Install dependencies
-apt install -y nginx mysql-server git supervisor curl wget unzip
+# 2. Fix tzdata if stuck
+dpkg --configure -a 2>/dev/null || true
 
-# 3. PHP 8.2
+# 3. Install dependencies
+apt install -y nginx mysql-server git supervisor curl wget unzip software-properties-common
+
+# 4. PHP 8.2
 add-apt-repository ppa:ondrej/php -y
 apt update
 apt install -y php8.2-fpm php8.2-mysql php8.2-mbstring \
@@ -28,6 +30,9 @@ curl -fsSL https://deb.nodesource.com/setup_20.x | bash
 apt install -y nodejs
 
 # 6. Clone repo
+# Fix .env.example defaults before clone/setup
+sed -i 's/CACHE_STORE=database/CACHE_STORE=file/' /var/www/cat-house-cms/backend/.env.example 2>/dev/null || true
+
 mkdir -p /var/www
 cd /var/www
 
@@ -56,18 +61,15 @@ cd /var/www/cat-house-cms/backend
 
 if [ ! -f ".env" ]; then
   cp .env.example .env
-  sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=mysql/" .env
-  sed -i "s/# DB_HOST=.*/DB_HOST=127.0.0.1/" .env
-  sed -i "s/# DB_PORT=.*/DB_PORT=3306/" .env
-  sed -i "s/# DB_DATABASE=.*/DB_DATABASE=cat_house/" .env
-  sed -i "s/# DB_USERNAME=.*/DB_USERNAME=cat_house/" .env
-  sed -i "s/# DB_PASSWORD=.*/DB_PASSWORD=KosongSemua/" .env
   sed -i "s/APP_URL=.*/APP_URL=http:\/\/$(curl -s ifconfig.me)/" .env
   php artisan key:generate
   echo ".env created and configured"
 else
   echo ".env already exists, skipping"
 fi
+
+# Fix CACHE_STORE (example still uses 'database')
+sed -i 's/CACHE_STORE=database/CACHE_STORE=file/' .env
 
 # 9. Setup backend
 echo ""
@@ -87,7 +89,11 @@ cd /var/www/cat-house-cms/frontend
 npm ci
 npm run build
 
-# 12. Setup Nginx
+# 12. Stop & disable Apache (if installed)
+systemctl stop apache2 2>/dev/null || true
+systemctl disable apache2 2>/dev/null || true
+
+# 13. Setup Nginx
 echo ""
 echo "========== Setup Nginx =========="
 cat > /etc/nginx/sites-available/cat-house << 'NGINX_CONF'
@@ -130,7 +136,13 @@ ln -sf /etc/nginx/sites-available/cat-house /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 nginx -t && systemctl reload nginx
 
-# 13. Setup Supervisor (queue worker)
+# 14. Create storage framework directories
+mkdir -p /var/www/cat-house-cms/backend/storage/framework/views
+mkdir -p /var/www/cat-house-cms/backend/storage/framework/cache
+mkdir -p /var/www/cat-house-cms/backend/storage/framework/sessions
+chmod -R 775 /var/www/cat-house-cms/backend/storage/framework
+
+# 15. Setup Supervisor (queue worker)
 echo ""
 echo "========== Setup Supervisor =========="
 cat > /etc/supervisor/conf.d/cat-house-worker.conf << 'SUPERVISOR_CONF'
@@ -150,7 +162,7 @@ SUPERVISOR_CONF
 
 supervisorctl reread && supervisorctl update
 
-# 14. Set permissions
+# 16. Set permissions
 echo ""
 echo "========== Set Permissions =========="
 chown -R www-data:www-data /var/www/cat-house-cms/backend/storage
