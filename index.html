@@ -1,0 +1,542 @@
+<!doctype html>
+
+<html class="scroll-smooth" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Papfum | Premium Cat Care &amp; Nutrition</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&amp;family=Poppins:wght@400;600;700&amp;family=Inter:wght@400;500&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              secondary: '#595799',
+              tertiary: '#356574',
+              'inverse-primary': '#ffb695',
+              'on-surface-variant': '#56423a',
+              'on-secondary-fixed': '#141052',
+              surface: '#f9f9f9',
+              'text-dark': '#1A1A2E',
+              'surface-tint': '#9f420c',
+              'on-primary': '#ffffff',
+              'surface-container-low': '#f3f3f4',
+              'on-background': '#1a1c1c',
+              'amber-accent': '#E8A830',
+              'on-secondary-fixed-variant': '#413f80',
+              'on-tertiary-fixed-variant': '#194d5c',
+              'on-secondary': '#ffffff',
+              'primary-fixed': '#ffdbcc',
+              'inverse-surface': '#2f3131',
+              'on-secondary-container': '#454484',
+              'on-tertiary-fixed': '#001f28',
+              'on-tertiary': '#ffffff',
+              'primary-container': '#f4824a',
+              'star-yellow': '#FFC107',
+              outline: '#8a7268',
+              'tertiary-container': '#79a8b9',
+              'outline-variant': '#ddc1b5',
+              'surface-bright': '#f9f9f9',
+              background: '#f9f9f9',
+              'on-primary-fixed-variant': '#7c2e00',
+              'secondary-container': '#b6b4fe',
+              error: '#ba1a1a',
+              'surface-dim': '#dadada',
+              'primary-fixed-dim': '#ffb695',
+              'tertiary-fixed-dim': '#9ecee0',
+              'ghost-paw': '#E0E0EE',
+              'tertiary-fixed': '#baeafc',
+              'surface-container': '#eeeeee',
+              'secondary-fixed': '#e2dfff',
+              'secondary-fixed-dim': '#c3c0ff',
+              'on-tertiary-container': '#013d4c',
+              primary: '#9f420c',
+              'inverse-on-surface': '#f0f1f1',
+              'error-container': '#ffdad6',
+              'text-muted': '#6B6B8A',
+              'surface-variant': '#e2e2e2',
+              'border-light': '#E8E8F0',
+              'on-primary-fixed': '#351000',
+              'on-error-container': '#93000a',
+              'on-primary-container': '#632400',
+              'surface-container-highest': '#e2e2e2',
+              'surface-container-lowest': '#ffffff',
+              'surface-container-high': '#e8e8e8',
+              'on-error': '#ffffff',
+              'on-surface': '#1a1c1c',
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              'stack-md': '1rem',
+              'stack-lg': '2.5rem',
+              'stack-sm': '0.5rem',
+              'section-gap': '6rem',
+              'container-max': '1200px',
+              gutter: '1.5rem',
+            },
+            fontFamily: {
+              'hero-display': ['Fredoka One'],
+              'ui-label': ['Poppins'],
+              'body-small': ['Inter'],
+              'h2-section': ['Fredoka One'],
+              'price-lg': ['Poppins'],
+              'h3-card': ['Poppins'],
+              'body-main': ['Inter'],
+            },
+            fontSize: {
+              'hero-display': [
+                '72px',
+                {
+                  lineHeight: '1.1',
+                  letterSpacing: '0.02em',
+                  fontWeight: '400',
+                },
+              ],
+              'ui-label': ['15px', { lineHeight: '1.2', fontWeight: '600' }],
+              'body-small': ['14px', { lineHeight: '1.5', fontWeight: '400' }],
+              'h2-section': ['28px', { lineHeight: '1.4', fontWeight: '400' }],
+              'price-lg': ['20px', { lineHeight: '1.2', fontWeight: '700' }],
+              'h3-card': ['20px', { lineHeight: '1.4', fontWeight: '600' }],
+              'body-main': ['16px', { lineHeight: '1.6', fontWeight: '400' }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+        vertical-align: middle;
+      }
+      .stamp-rotate {
+        animation: rotate 15s linear infinite;
+      }
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .arc-shape {
+        border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+      }
+      .custom-shadow {
+        box-shadow: 0 10px 30px rgba(45, 43, 107, 0.08);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-surface text-text-dark font-body-main selection:bg-primary-fixed selection:text-on-primary-container overflow-x-hidden"
+  >
+    <!-- TopNavBar -->
+    <header
+      class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-border-light"
+    >
+      <div
+        class="max-w-container-max mx-auto px-gutter py-4 flex justify-between items-center"
+      >
+        <!-- Brand Logo -->
+        <a class="flex items-center gap-2 group" href="#">
+          <span
+            class="material-symbols-outlined text-primary text-3xl"
+            style="font-variation-settings: 'FILL' 1"
+            >pets</span
+          >
+          <span class="font-hero-display text-h3-card text-primary"
+            >Papfum</span
+          >
+        </a>
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a
+            class="font-ui-label text-ui-label text-primary border-b-2 border-primary pb-1"
+            href="#"
+            >About</a
+          >
+          <a
+            class="font-ui-label text-ui-label text-text-dark hover:text-primary transition-colors duration-200"
+            href="#"
+            >Services</a
+          >
+          <a
+            class="font-ui-label text-ui-label text-text-dark hover:text-primary transition-colors duration-200"
+            href="#"
+            >More Food</a
+          >
+          <a
+            class="font-ui-label text-ui-label text-text-dark hover:text-primary transition-colors duration-200"
+            href="#"
+            >Products</a
+          >
+          <a
+            class="font-ui-label text-ui-label text-text-dark hover:text-primary transition-colors duration-200"
+            href="#"
+            >Shop All</a
+          >
+        </nav>
+        <!-- Trailing Action -->
+        <div class="flex items-center gap-4">
+          <button
+            class="bg-primary hover:bg-on-primary-container text-on-primary px-6 py-2.5 rounded-full font-ui-label text-ui-label transition-all duration-200 scale-102 flex items-center gap-2"
+          >
+            <span class="material-symbols-outlined text-sm">shopping_cart</span>
+            Shop Now
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="pt-24">
+      <!-- Hero Section -->
+      <section class="max-w-container-max mx-auto px-gutter py-16">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          <!-- Left Column (35%) -->
+          <div
+            class="md:col-span-4 relative h-full flex flex-col justify-center"
+          >
+            <div class="mb-4">
+              <span class="material-symbols-outlined text-primary text-3xl"
+                >restaurant</span
+              >
+            </div>
+            <h1
+              class="font-hero-display text-hero-display text-primary leading-none mb-6"
+            >
+              YOUR PUPP'S BEST FRIEND
+            </h1>
+            <p class="text-text-muted text-body-main mb-8 max-w-sm">
+              Training, grooming to nutrition &amp; exercise, there's caring
+              worth often becomes the family.
+            </p>
+            <button
+              class="w-fit bg-primary-container text-on-primary px-8 py-4 rounded-full font-ui-label text-ui-label hover:scale-105 transition-transform"
+            >
+              Book a Schedule
+            </button>
+            <!-- Faint Paw Print -->
+            <div
+              class="absolute -bottom-10 -left-10 pointer-events-none opacity-20"
+            >
+              <span
+                class="material-symbols-outlined text-[120px] text-ghost-paw"
+                >pets</span
+              >
+            </div>
+          </div>
+          <!-- Center Column (35%) -->
+          <div
+            class="md:col-span-4 relative flex justify-center items-end h-full min-h-[500px]"
+          >
+            <div
+              class="absolute inset-0 bg-tertiary-fixed/30 arc-shape w-full h-[80%] bottom-0 -z-10"
+            ></div>
+            <img
+              alt="Orange and white tabby cat"
+              class="w-full h-auto object-contain z-10"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf4rICfFZsX4EKiukFVVwrGA5KJkFKplDE93sOT5BLnIq3Tk9kPq9p__CRb45p93gSyJ7Kn3F3MNRnLAClMHghTxgcmQuptPCW6vcCZOM_EoKZUxLZ6-KqhGVQ9ytw4fC6eEAh5Mwj6yEuWCEufblaqx3hKz6zLcFhILgqo7mPpovoAi_b_wTgTkeN7XvAUpBceDQI_pSMqK9Q3rzouD8GDtq2kn5QBBoQp5Ou4DLKcGX_c-9bfI90tHHikp9xk3NfzZ32_Hw8rg"
+            />
+          </div>
+          <!-- Right Column (30%) -->
+          <div
+            class="md:col-span-4 relative flex flex-col justify-between h-full py-8"
+          >
+            <!-- Top Right Paw Icon -->
+            <div class="absolute top-0 right-0">
+              <span
+                class="material-symbols-outlined text-primary text-4xl opacity-40"
+                >pets</span
+              >
+            </div>
+            <!-- Product Featured -->
+            <div class="mt-auto">
+              <div class="relative mb-8 flex justify-center">
+                <img
+                  alt="Mau cat food packaging"
+                  class="w-48 h-auto drop-shadow-xl hover:rotate-3 transition-transform duration-500"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfhHAqqK9z6lJCt_f9fIZhRzop1VpGIQOfuOOzHn3pGFZt7haN8l1jJJlSZBOOmgmkbnggBacRsfIgZcbMn2nESWtF7I2lhpyFTGv2YDqTDN5zZ7RVq1mVzavS0wEItvXPd1Nb_uWLmQBNLw6_16EuP-lssIP0flzSyf1JBzwOQaQ1W8uewOzCui0cHhXTN-zBHURGzLW-I3iw_c9VvVUnDltdX2In2XYjzMk2yOawatjZ5ZJnNNb674Bb177zCL_GWuCdJz0kuA"
+                />
+              </div>
+              <div
+                class="bg-surface-container-lowest p-6 rounded-2xl border border-border-light shadow-sm"
+              >
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="font-h3-card text-text-dark">Dry cat food bowl</h3>
+                  <div class="flex gap-1">
+                    <button
+                      class="w-8 h-8 rounded-full border border-border-light flex items-center justify-center hover:bg-primary/10 transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-sm"
+                        >chevron_left</span
+                      >
+                    </button>
+                    <button
+                      class="w-8 h-8 rounded-full border border-border-light flex items-center justify-center hover:bg-primary/10 transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-sm"
+                        >chevron_right</span
+                      >
+                    </button>
+                  </div>
+                </div>
+                <p class="font-price-lg text-primary mb-4">$29.123</p>
+                <!-- Circular Stamp Overlay -->
+                <div
+                  class="absolute -right-4 -top-4 w-24 h-24 bg-primary rounded-full flex items-center justify-center p-2 text-center shadow-lg stamp-rotate border-4 border-surface overflow-hidden"
+                >
+                  <p class="text-[8px] font-bold text-on-primary leading-tight">
+                    THE COMPLETE TASTE ISOLATED ON WHIBUY CAT BISCUIT TREAT
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Bottom Section -->
+      <section class="max-w-container-max mx-auto px-gutter py-section-gap">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+          <!-- Info Card (Left Block) -->
+          <div
+            class="md:col-span-4 bg-on-secondary-fixed rounded-[40px] p-10 flex flex-col justify-between text-on-primary min-h-[400px]"
+          >
+            <div>
+              <h2 class="font-h2-section text-[42px] leading-[1.2] mb-6">
+                GIVE DELICIOUS VARIETY NUTRITION FOODS
+              </h2>
+              <p class="text-secondary-fixed opacity-90 text-body-main mb-8">
+                Cat food toppings are good for cats, just remember to give in
+                moderation
+              </p>
+            </div>
+            <a
+              class="flex items-center gap-2 font-ui-label text-ui-label text-on-primary group w-fit"
+              href="#"
+            >
+              Read Article
+              <span
+                class="material-symbols-outlined group-hover:translate-x-2 transition-transform"
+                >arrow_forward</span
+              >
+            </a>
+          </div>
+          <!-- Product Grid (Right Block) -->
+          <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Card 1 -->
+            <div
+              class="bg-white border border-border-light p-6 rounded-3xl group hover:custom-shadow transition-all duration-300 relative overflow-hidden"
+            >
+              <div class="h-40 flex justify-center mb-4">
+                <img
+                  alt="Fancy Feast product"
+                  class="h-full object-contain group-hover:scale-105 transition-transform"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg9s2hQowEfvIbPOQNLqJ7_zAq7Tec9vTLFrQgailHaexkSUpRwcFgNuQvo5IEycCPHq3MAiP2w_6RuaTLGegMDSoG704LhoKk0Qcqa4jjfLXmGUYEZnz5GEwINcfAD0nF1bH_u1Ofc462EZIHjbwYP2zWWVozuM2ss8ZYkOOx39cb0qAjGWrIe0miFBHZull3-PU6CIw9RUVQb5xJoq7zP0JQt_NLBrkukydNgjWJvANbaTbJGgkII3hjUuPPUJEvwqvqm9E1pw"
+                />
+              </div>
+              <h4 class="font-h3-card text-text-dark mb-1">Fancy Feast</h4>
+              <div class="flex items-center gap-2 mb-4">
+                <div class="flex text-star-yellow">
+                  <span
+                    class="material-symbols-outlined text-sm"
+                    style="font-variation-settings: 'FILL' 1"
+                    >star</span
+                  >
+                  <span class="font-ui-label text-xs text-text-muted ml-1"
+                    >4.9 (46 Reviews)</span
+                  >
+                </div>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="font-price-lg text-primary">$28.00</span>
+                <button
+                  class="w-10 h-10 bg-primary-container rounded-xl text-on-primary flex items-center justify-center hover:rotate-90 transition-transform"
+                >
+                  <span class="material-symbols-outlined">add</span>
+                </button>
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div
+              class="bg-white border border-border-light p-6 rounded-3xl group hover:custom-shadow transition-all duration-300 relative overflow-hidden"
+            >
+              <div class="h-40 flex justify-center mb-4">
+                <img
+                  alt="Purina Pro product"
+                  class="h-full object-contain group-hover:scale-105 transition-transform"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCGcHruM8mpKW_sou5rny4ZAC1yh3nvG-xU75FxcIE_V5mKFEEd7RRkn7GRxj-hWbGI3bhzDXnq_QHzVbtd6SY9FApOf6MPVIsoGS2xKtkh5zNkRiWHO4XvRIMlyR4srH7SzfB2SqLAjN9W8FkY2qqmzODYU1cR_rjAsBiWS6oorprE-Cn6vIGjw5OPdVVcNrwxw-iiSWUU9Nukm6ue9U6lKDSVZo0nLKn11KUt5cWzKLeFMhIxA9yNoD2ZuYut2ef8kAyrLuR7w"
+                />
+              </div>
+              <h4 class="font-h3-card text-text-dark mb-1">Purina Pro</h4>
+              <div class="flex items-center gap-2 mb-4">
+                <div class="flex text-star-yellow">
+                  <span
+                    class="material-symbols-outlined text-sm"
+                    style="font-variation-settings: 'FILL' 1"
+                    >star</span
+                  >
+                  <span class="font-ui-label text-xs text-text-muted ml-1"
+                    >4.9 (88 Reviews)</span
+                  >
+                </div>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="font-price-lg text-primary">$14.00</span>
+                <button
+                  class="w-10 h-10 bg-primary-container rounded-xl text-on-primary flex items-center justify-center hover:rotate-90 transition-transform"
+                >
+                  <span class="material-symbols-outlined">add</span>
+                </button>
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div
+              class="bg-white border border-border-light p-6 rounded-3xl group hover:custom-shadow transition-all duration-300 relative overflow-hidden"
+            >
+              <div class="h-40 flex justify-center mb-4">
+                <img
+                  alt="Science Diet product"
+                  class="h-full object-contain group-hover:scale-105 transition-transform"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAt-CRBzXDk5denYUXElA3Y36KjYWn678tTAQGKrm_x912SzUwXQklDhsk3dYyBvzVIWzsTF4Fq8WV15aDFVV3UtSw9udYo6ZrLSdbn84I7p0knLZFjXmum2kDMQX9U0Nb3A1d3-GjwwMm3XDeFLH82VLKzELzzD8ab-vKAircrvP4JslIvvdPfDr-b-_zqhpJxL0VzbGOrjlVMczs8z_uaz9vAHqFrHNxZJI99FT2DjsLMoLSM7WPsmUTpBTdJCMJgxpfdnoLZPQ"
+                />
+              </div>
+              <h4 class="font-h3-card text-text-dark mb-1">Science Diet</h4>
+              <div class="flex items-center gap-2 mb-4">
+                <div class="flex text-star-yellow">
+                  <span
+                    class="material-symbols-outlined text-sm"
+                    style="font-variation-settings: 'FILL' 1"
+                    >star</span
+                  >
+                  <span class="font-ui-label text-xs text-text-muted ml-1"
+                    >4.9 (46 Reviews)</span
+                  >
+                </div>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="font-price-lg text-primary">$28.00</span>
+                <button
+                  class="w-10 h-10 bg-primary-container rounded-xl text-on-primary flex items-center justify-center hover:rotate-90 transition-transform"
+                >
+                  <span class="material-symbols-outlined">add</span>
+                </button>
+              </div>
+            </div>
+            <!-- Card 4 -->
+            <div
+              class="bg-white border border-border-light p-6 rounded-3xl group hover:custom-shadow transition-all duration-300 relative overflow-hidden"
+            >
+              <div class="h-40 flex justify-center mb-4">
+                <img
+                  alt="Blue Buffalo product"
+                  class="h-full object-contain group-hover:scale-105 transition-transform"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVbYceJv-anwyvKrbq4kGTH75uN7lUBEsID3QFwLflRmiuqXVr-jinQvfknGn7ZEcERuhpEew-s-aA0PQ72U_WANjR6GFHx5fl7y7IjDSkFsFPBT7yEs3RA3qcp7SagymIFP0KJCnehbQIXbb3t_Mk2U-KSyravrAcBblavfZueMPew3lvL4FCSMdF9MXTkla_Vk_9T0KfdHRKV204vdCYKhWherzan35sSjlhR9uTf6knoboTj52_AwN8_J1VyNA3nkmHGShNDg"
+                />
+              </div>
+              <h4 class="font-h3-card text-text-dark mb-1">Blue Buffalo</h4>
+              <div class="flex items-center gap-2 mb-4">
+                <div class="flex text-star-yellow">
+                  <span
+                    class="material-symbols-outlined text-sm"
+                    style="font-variation-settings: 'FILL' 1"
+                    >star</span
+                  >
+                  <span class="font-ui-label text-xs text-text-muted ml-1"
+                    >4.9 (46 Reviews)</span
+                  >
+                </div>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="font-price-lg text-primary">$29.00</span>
+                <button
+                  class="w-10 h-10 bg-primary-container rounded-xl text-on-primary flex items-center justify-center hover:rotate-90 transition-transform"
+                >
+                  <span class="material-symbols-outlined">add</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-surface-container-low border-t border-border-light">
+      <div
+        class="max-w-container-max mx-auto px-gutter py-stack-lg flex flex-col md:flex-row justify-between items-center gap-8"
+      >
+        <div class="flex items-center gap-2">
+          <span
+            class="material-symbols-outlined text-primary text-2xl"
+            style="font-variation-settings: 'FILL' 1"
+            >pets</span
+          >
+          <span class="font-hero-display text-h2-section text-on-background"
+            >Papfum</span
+          >
+        </div>
+        <div class="flex flex-wrap justify-center gap-6">
+          <a
+            class="font-body-small text-body-small text-text-muted hover:text-primary transition-all"
+            href="#"
+            >Privacy Policy</a
+          >
+          <a
+            class="font-body-small text-body-small text-text-muted hover:text-primary transition-all"
+            href="#"
+            >Terms of Service</a
+          >
+          <a
+            class="font-body-small text-body-small text-text-muted hover:text-primary transition-all"
+            href="#"
+            >Shipping Info</a
+          >
+          <a
+            class="font-body-small text-body-small text-text-muted hover:text-primary transition-all"
+            href="#"
+            >Returns</a
+          >
+        </div>
+        <p class="font-body-small text-body-small text-text-muted">
+          © 2024 Papfum Pet Care. All rights reserved.
+        </p>
+      </div>
+    </footer>
+    <script>
+      // Simple micro-interactions
+      document.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('mousedown', () => {
+          button.classList.add('scale-95');
+        });
+        button.addEventListener('mouseup', () => {
+          button.classList.remove('scale-95');
+        });
+      });
+
+      // Floating Paw effects
+      document.addEventListener('mousemove', (e) => {
+        // Optional: Subtle parallax for ghost paws could go here
+      });
+    </script>
+  </body>
+</html>
