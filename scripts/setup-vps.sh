@@ -100,26 +100,35 @@ cat > /etc/nginx/sites-available/cat-house << 'NGINX_CONF'
 server {
     listen 80;
     server_name _;
-    root /var/www/cat-house-cms/backend/public;
+    charset utf-8;
 
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-Content-Type-Options "nosniff";
 
-    index index.php;
-
-    charset utf-8;
+    # React Frontend SPA
+    root /var/www/cat-house-cms/frontend/dist;
+    index index.html;
 
     location / {
-        try_files $uri $uri/ /index.php?$query_string;
+        try_files $uri $uri/ /index.html;
     }
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 
-    location ~ \.php$ {
+    # Laravel API
+    location /api/ {
         fastcgi_pass unix:/run/php/php8.2-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME /var/www/cat-house-cms/backend/public/index.php;
+        fastcgi_param SCRIPT_NAME /index.php;
+    }
+
+    location /sanctum/ {
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME /var/www/cat-house-cms/backend/public/index.php;
+        fastcgi_param SCRIPT_NAME /index.php;
     }
 
     location /storage/ {
