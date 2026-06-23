@@ -16,6 +16,8 @@ jobs:
           node-version: 22
 
       - name: Build frontend
+        env:
+          VITE_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_RECAPTCHA_SITE_KEY }}
         run: |
           cd frontend
           npm ci
