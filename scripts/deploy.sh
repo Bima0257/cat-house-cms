@@ -21,14 +21,6 @@ php artisan migrate --force
 php artisan optimize:clear
 php artisan optimize
 
-# Frontend
-echo ""
-echo "--- Frontend ---"
-cd ../frontend
-export NODE_OPTIONS="--max-old-space-size=256"
-npm ci
-npm run build
-
 # Restart services
 echo ""
 echo "--- Restart Services ---"

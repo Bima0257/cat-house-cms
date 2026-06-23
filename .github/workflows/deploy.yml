@@ -10,7 +10,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy via SSH
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+      - name: Copy dist to VPS
+        uses: appleboy/scp-action@v0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 35572
+          source: frontend/dist
+          target: /var/www/cat-house-cms/frontend/dist
+          strip_components: 2
+          rm: true
+
+      - name: Deploy backend
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
