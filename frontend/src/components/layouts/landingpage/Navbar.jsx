@@ -45,7 +45,7 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           <Link
             to="/login"
-            className="hidden md:flex items-center gap-1.5 border border-primary text-primary px-5 py-2 rounded-full font-ui-label text-ui-label hover:bg-primary hover:text-white transition-all duration-200"
+            className="flex items-center gap-1.5 border border-primary text-primary px-3 py-1.5 md:px-5 md:py-2 rounded-full font-ui-label text-ui-label hover:bg-primary hover:text-white transition-all duration-200"
           >
             <IconLogin size={16} /> Masuk
           </Link>
