@@ -21,17 +21,16 @@ jobs:
           npm ci
           npm run build
 
-      - name: Copy dist to VPS
-        uses: appleboy/scp-action@v0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 35572
-          source: frontend/dist
-          target: /var/www/cat-house-cms/frontend/dist
-          strip_components: 2
-          rm: true
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p 35572 -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Rsync dist to VPS
+        run: |
+          rsync -avz --delete -e "ssh -p 35572" frontend/dist/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/cat-house-cms/frontend/dist/
 
       - name: Deploy backend
         uses: appleboy/ssh-action@v1
