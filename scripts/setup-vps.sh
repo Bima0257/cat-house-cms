@@ -1,9 +1,13 @@
 #!/bin/bash
 set -e
 
+export DEBIAN_FRONTEND=noninteractive
+export TZ=Asia/Jakarta
+
 echo "========== Cat House CMS — VPS Setup =========="
 
-# 1. System update
+# 1. Set timezone & system update
+ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 apt update && apt upgrade -y
 
 # 2. Install dependencies
