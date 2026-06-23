@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import {
   IconPaw,
   IconLogin,
   IconUserPlus,
-  IconX,
 } from '@tabler/icons-react';
 
 const navItems = [
@@ -17,8 +15,6 @@ const navItems = [
 ];
 
 const Navbar = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-border-light">
       <div className="max-w-container-max mx-auto px-gutter py-4 flex justify-between items-center">
@@ -59,56 +55,8 @@ const Navbar = () => {
           >
             <IconUserPlus size={16} /> Daftar
           </Link>
-          <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? (
-              <IconX size={24} className="text-text-dark" />
-            ) : (
-              <>
-                <span className="block w-6 h-0.5 bg-text-dark transition-all"></span>
-                <span className="block w-6 h-0.5 bg-text-dark transition-all"></span>
-                <span className="block w-6 h-0.5 bg-text-dark transition-all"></span>
-              </>
-            )}
-          </button>
         </div>
       </div>
-
-      {mobileOpen && (
-        <div className="md:hidden bg-surface border-t border-border-light px-gutter py-4 flex flex-col gap-3">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === '/'}
-              onClick={() => setMobileOpen(false)}
-              className={({ isActive }) =>
-                `font-ui-label text-ui-label py-2 ${isActive ? 'text-primary' : 'text-text-dark'}`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
-          <div className="flex gap-3 pt-2 border-t border-border-light">
-            <Link
-              to="/login"
-              onClick={() => setMobileOpen(false)}
-              className="flex-1 border border-primary text-primary px-4 py-2 rounded-full font-ui-label text-sm hover:bg-primary hover:text-white transition-all text-center"
-            >
-              Masuk
-            </Link>
-            <Link
-              to="/register"
-              onClick={() => setMobileOpen(false)}
-              className="flex-1 bg-primary text-white px-4 py-2 rounded-full font-ui-label text-sm hover:bg-on-primary-container transition-all text-center"
-            >
-              Daftar
-            </Link>
-          </div>
-        </div>
-      )}
     </header>
   );
 };
