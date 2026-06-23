@@ -25,7 +25,7 @@ php artisan optimize
 echo ""
 echo "--- Frontend ---"
 cd ../frontend
-export NODE_OPTIONS="--max-old-space-size=512"
+export NODE_OPTIONS="--max-old-space-size=256"
 npm ci
 npm run build
 

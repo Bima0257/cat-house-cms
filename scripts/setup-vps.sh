@@ -86,6 +86,7 @@ php artisan migrate --force
 echo ""
 echo "========== Setup Frontend =========="
 cd /var/www/cat-house-cms/frontend
+export NODE_OPTIONS="--max-old-space-size=256"
 npm ci
 npm run build
 
