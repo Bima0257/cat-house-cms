@@ -53,7 +53,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
+          username:'ngawur'
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.VPS_PORT }} # <-- KUNCI UTAMA UNTUK NAT VPS
           script_stop: true # <-- Pengganti 'set -e', jika ada command yang gagal, proses langsung stop
