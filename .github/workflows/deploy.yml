@@ -16,6 +16,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.VPS_PORT }}
           script: |
             cd /var/www/cat-house-cms
             git pull origin main
