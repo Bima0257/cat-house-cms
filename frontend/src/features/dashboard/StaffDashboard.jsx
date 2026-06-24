@@ -91,27 +91,44 @@ const StaffDashboard = () => {
               Reservasi Terbaru
             </h2>
           </div>
-          <div className="p-5 space-y-3">
-            {reservations.length === 0 ? (
-              <p className="text-center py-6 text-text-muted text-sm">Belum ada reservasi</p>
-            ) : (
-              reservations.map((res) => (
-                <div key={res.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-primary-fixed rounded-lg flex items-center justify-center">
-                      <IconPaw size={16} className="text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-text-dark">{res.cat?.name || '-'}</p>
-                      <p className="text-xs text-text-muted">{res.user?.name} | {res.check_in}</p>
-                    </div>
-                  </div>
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${(statusColor[res.status] || statusColor.pending).bg} ${(statusColor[res.status] || statusColor.pending).text}`}>
-                    {res.status}
-                  </span>
-                </div>
-              ))
-            )}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-gray-50 border-b border-border-light">
+                  <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Kucing</th>
+                  <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Pelanggan</th>
+                  <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Check-in</th>
+                  <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-light">
+                {reservations.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="px-5 py-8 text-center text-text-muted text-sm">Belum ada reservasi</td>
+                  </tr>
+                ) : (
+                  reservations.map((res) => (
+                    <tr key={res.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-primary-fixed/20 flex items-center justify-center">
+                            <IconPaw size={18} className="text-primary" />
+                          </div>
+                          <span className="font-medium text-text-dark">{res.cat?.name || '-'}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-sm text-text-muted">{res.user?.name || '-'}</td>
+                      <td className="px-5 py-4 text-sm text-text-muted">{res.check_in}</td>
+                      <td className="px-5 py-4">
+                        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${(statusColor[res.status] || statusColor.pending).bg} ${(statusColor[res.status] || statusColor.pending).text}`}>
+                          {res.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -123,29 +140,44 @@ const StaffDashboard = () => {
               Verifikasi Pembayaran
             </h2>
           </div>
-          <div className="p-5 space-y-3">
-            {pendingPayments.length === 0 ? (
-              <p className="text-center py-6 text-text-muted text-sm">Tidak ada pembayaran pending</p>
-            ) : (
-              pendingPayments.map((payment) => (
-                <div key={payment.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
-                      <IconCash size={16} className="text-green-700" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-text-dark">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-gray-50 border-b border-border-light">
+                  <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Pelanggan</th>
+                  <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Jumlah</th>
+                  <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-light">
+                {pendingPayments.length === 0 ? (
+                  <tr>
+                    <td colSpan="3" className="px-5 py-8 text-center text-text-muted text-sm">Tidak ada pembayaran pending</td>
+                  </tr>
+                ) : (
+                  pendingPayments.map((payment) => (
+                    <tr key={payment.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
+                            <IconCash size={18} className="text-green-700" />
+                          </div>
+                          <span className="font-medium text-text-dark">{payment.reservation?.user?.name || '-'}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-sm font-medium text-text-dark">
                         Rp {Number(payment.amount).toLocaleString('id-ID')}
-                      </p>
-                      <p className="text-xs text-text-muted">{payment.reservation?.user?.name}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700">
-                    pending
-                  </span>
-                </div>
-              ))
-            )}
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700">
+                          pending
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

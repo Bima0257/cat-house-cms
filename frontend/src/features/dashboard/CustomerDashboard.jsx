@@ -6,6 +6,7 @@ import {
   IconPaw,
   IconCalendarMonth,
   IconArrowRight,
+  IconEye,
 } from '@tabler/icons-react';
 
 const statusColor = {
@@ -76,31 +77,47 @@ const CustomerDashboard = () => {
               <IconArrowRight size={16} />
             </Link>
           </div>
-          <div className="p-5">
-            {cats.length === 0 ? (
-              <div className="text-center py-8">
-                <IconPaw size={48} className="text-text-muted/30 mx-auto mb-3" />
-                <p className="text-text-muted text-sm">Belum ada kucing</p>
-                <Link to="/customer/cats" className="text-primary hover:underline text-sm mt-2 inline-block">
-                  Tambah Kucing
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {cats.map((cat) => (
-                  <div key={cat.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                    <div className="w-10 h-10 bg-primary-fixed rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-lg">😺</span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-text-dark">{cat.name}</p>
-                      <p className="text-xs text-text-muted">{cat.breed || 'Kucing'}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {cats.length === 0 ? (
+            <div className="text-center py-8">
+              <IconPaw size={48} className="text-text-muted/30 mx-auto mb-3" />
+              <p className="text-text-muted text-sm">Belum ada kucing</p>
+              <Link to="/customer/cats" className="text-primary hover:underline text-sm mt-2 inline-block">
+                Tambah Kucing
+              </Link>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-border-light">
+                    <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Nama</th>
+                    <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Ras</th>
+                    <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Detail</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border-light">
+                  {cats.map((cat) => (
+                    <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-primary-fixed/20 flex items-center justify-center">
+                            <span className="text-lg">😺</span>
+                          </div>
+                          <span className="font-medium text-text-dark">{cat.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-sm text-text-muted">{cat.breed || 'Kucing'}</td>
+                      <td className="px-5 py-4">
+                        <button className="w-8 h-8 rounded-lg border border-border-light flex items-center justify-center text-text-muted hover:text-primary hover:border-primary transition-all">
+                          <IconEye size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Reservasi Terbaru */}
@@ -115,31 +132,47 @@ const CustomerDashboard = () => {
               <IconArrowRight size={16} />
             </Link>
           </div>
-          <div className="p-5">
-            {reservations.length === 0 ? (
-              <div className="text-center py-8">
-                <IconCalendarMonth size={48} className="text-text-muted/30 mx-auto mb-3" />
-                <p className="text-text-muted text-sm">Belum ada reservasi</p>
-                <Link to="/customer/reservations" className="text-primary hover:underline text-sm mt-2 inline-block">
-                  Buat Reservasi
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {reservations.slice(0, 3).map((res) => (
-                  <div key={res.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                    <div className="flex-1">
-                      <p className="font-medium text-text-dark">{res.cat?.name || 'Kucing'}</p>
-                      <p className="text-xs text-text-muted">{res.check_in} - {res.check_out}</p>
-                    </div>
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${(statusColor[res.status] || statusColor.pending).bg} ${(statusColor[res.status] || statusColor.pending).text}`}>
-                      {res.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {reservations.length === 0 ? (
+            <div className="text-center py-8">
+              <IconCalendarMonth size={48} className="text-text-muted/30 mx-auto mb-3" />
+              <p className="text-text-muted text-sm">Belum ada reservasi</p>
+              <Link to="/customer/reservations" className="text-primary hover:underline text-sm mt-2 inline-block">
+                Buat Reservasi
+              </Link>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-border-light">
+                    <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Kucing</th>
+                    <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Tanggal</th>
+                    <th className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border-light">
+                  {reservations.slice(0, 3).map((res) => (
+                    <tr key={res.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-primary-fixed/20 flex items-center justify-center">
+                            <IconPaw size={18} className="text-primary" />
+                          </div>
+                          <span className="font-medium text-text-dark">{res.cat?.name || 'Kucing'}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-sm text-text-muted">{res.check_in} - {res.check_out}</td>
+                      <td className="px-5 py-4">
+                        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${(statusColor[res.status] || statusColor.pending).bg} ${(statusColor[res.status] || statusColor.pending).text}`}>
+                          {res.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>
