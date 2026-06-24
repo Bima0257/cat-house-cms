@@ -2,6 +2,10 @@
 export DEBIAN_FRONTEND=noninteractive
 export TZ=Asia/Jakarta
 
+# Domain configuration - GANTI INI DENGAN DOMAIN KAMU
+DOMAIN="leondev.my.id"
+EMAIL="admin@leondev.my.id"  # Email untuk Let's Encrypt notifications
+
 echo "========== Cat House CMS — VPS Setup =========="
 
 # 1. Set timezone & system update
@@ -61,7 +65,7 @@ cd /var/www/cat-house-cms/backend
 
 if [ ! -f ".env" ]; then
   cp .env.example .env
-  sed -i "s/APP_URL=.*/APP_URL=http:\/\/$(curl -s ifconfig.me)/" .env
+  sed -i "s|APP_URL=.*|APP_URL=https://${DOMAIN}|" .env
   php artisan key:generate
   echo ".env created and configured"
 else
@@ -96,11 +100,11 @@ systemctl disable apache2 2>/dev/null || true
 
 # 13. Setup Nginx
 echo ""
-echo "========== Setup Nginx =========="
+echo "========== Setup Nginx (HTTP) =========="
 cat > /etc/nginx/sites-available/cat-house << 'NGINX_CONF'
 server {
     listen 80;
-    server_name _;
+    server_name DOMAIN_PLACEHOLDER;
     charset utf-8;
 
     add_header X-Frame-Options "SAMEORIGIN";
@@ -142,9 +146,96 @@ server {
 }
 NGINX_CONF
 
+# Replace placeholder with actual domain
+sed -i "s/DOMAIN_PLACEHOLDER/${DOMAIN}/" /etc/nginx/sites-available/cat-house
+
 ln -sf /etc/nginx/sites-available/cat-house /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 nginx -t && systemctl reload nginx
+
+# 13b. Setup SSL with Let's Encrypt
+echo ""
+echo "========== Setup SSL with Let's Encrypt =========="
+apt install -y certbot python3-certbot-nginx
+
+# Stop nginx temporarily for certbot standalone mode
+systemctl stop nginx
+
+# Get SSL certificate
+certbot certonly --standalone -d ${DOMAIN} --non-interactive --agree-tos -m ${EMAIL} --pre-hook "systemctl stop nginx" --post-hook "systemctl start nginx"
+
+# Create Nginx config with SSL
+cat > /etc/nginx/sites-available/cat-house-ssl << 'NGINX_SSL_CONF'
+server {
+    listen 80;
+    server_name DOMAIN_SSL_PLACEHOLDER;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name DOMAIN_SSL_PLACEHOLDER;
+    charset utf-8;
+
+    # SSL Certificate
+    ssl_certificate /etc/letsencrypt/live/DOMAIN_SSL_PLACEHOLDER/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/DOMAIN_SSL_PLACEHOLDER/privkey.pem;
+
+    # SSL Security Headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    # React Frontend SPA
+    root /var/www/cat-house-cms/frontend/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    # Laravel API
+    location /api/ {
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME /var/www/cat-house-cms/backend/public/index.php;
+        fastcgi_param SCRIPT_NAME /index.php;
+    }
+
+    location /sanctum/ {
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME /var/www/cat-house-cms/backend/public/index.php;
+        fastcgi_param SCRIPT_NAME /index.php;
+    }
+
+    location /storage/ {
+        alias /var/www/cat-house-cms/backend/storage/app/public/;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+NGINX_SSL_CONF
+
+# Replace placeholder with actual domain
+sed -i "s/DOMAIN_SSL_PLACEHOLDER/${DOMAIN}/g" /etc/nginx/sites-available/cat-house-ssl
+
+# Enable SSL config and disable HTTP-only
+ln -sf /etc/nginx/sites-available/cat-house-ssl /etc/nginx/sites-enabled/cat-house
+rm -f /etc/nginx/sites-enabled/cat-house
+
+# Setup auto-renewal cron job for SSL certificate
+(crontab -l 2>/dev/null; echo "0 0 * * * certbot renew --quiet --deploy-hook 'systemctl reload nginx'") | crontab -
+
+nginx -t && systemctl reload nginx
+
+echo "SSL certificate installed and auto-renewal configured!"
 
 # 14. Create storage framework directories
 mkdir -p /var/www/cat-house-cms/backend/storage/framework/views
@@ -180,8 +271,11 @@ chown -R www-data:www-data /var/www/cat-house-cms/backend/bootstrap/cache
 
 echo ""
 echo "========== Setup Complete! =========="
-echo "IP: $(curl -s ifconfig.me)"
-echo "Backend: http://$(curl -s ifconfig.me)/api/services/public"
+echo "Domain: https://${DOMAIN}"
+echo "Backend API: https://${DOMAIN}/api/services/public"
+echo ""
+echo "SSL Certificate: Let's Encrypt (auto-renew enabled)"
+echo "Certificate auto-renewal: Daily at 00:00"
 echo ""
 echo "Next steps:"
 echo "1. Setup SSH key for GitHub Actions"
