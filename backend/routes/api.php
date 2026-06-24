@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('reservations', ReservationController::class)->except(['edit', 'create']);
     Route::patch('/reservations/{id}/status', [ReservationController::class, 'updateStatus'])
         ->middleware('permission:reservations.update-status');
+    Route::post('/reservations/{id}/cancel', [ReservationController::class, 'cancel']);
 
     // Payments
     Route::apiResource('payments', PaymentController::class)->except(['edit', 'create', 'update', 'destroy']);

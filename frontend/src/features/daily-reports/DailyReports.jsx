@@ -121,8 +121,8 @@ const DailyReports = () => {
                 className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400" rows={2} />
             </div>
             <div className="md:col-span-2">
-              <button type="submit" className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors font-semibold">
-                Simpan Laporan
+              <button type="submit" disabled={createMutation.isPending} className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed">
+                {createMutation.isPending ? 'Menyimpan...' : 'Simpan Laporan'}
               </button>
             </div>
           </form>

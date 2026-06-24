@@ -11,6 +11,12 @@ use Illuminate\Support\Str;
 
 class ReservationService
 {
+    private const ALLOWED_TRANSITIONS = [
+        'pending' => ['konfirmasi', 'batal'],
+        'konfirmasi' => ['checkin', 'batal'],
+        'checkin' => ['checkout', 'batal'],
+    ];
+
     public function getAll(array $filters = [])
     {
         return Reservation::query()
@@ -49,13 +55,42 @@ class ReservationService
     public function updateStatus(int $id, string $status): Reservation
     {
         $reservation = $this->findById($id);
+
+        $allowed = self::ALLOWED_TRANSITIONS[$reservation->status] ?? [];
+        if (!in_array($status, $allowed)) {
+            abort(422, "Tidak dapat mengubah status dari '{$reservation->status}' ke '{$status}'");
+        }
+
         $reservation->update(['status' => $status]);
 
-        if ($status === ReservationStatus::CheckOut->value) {
+        if ($status === ReservationStatus::CheckOut->value || $status === ReservationStatus::Batal->value) {
             Cage::where('id', $reservation->cage_id)->update(['status' => 'tersedia']);
         }
 
         return $reservation;
+    }
+
+    public function cancel(int $id): Reservation
+    {
+        $reservation = $this->findById($id);
+
+        if ($reservation->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses untuk membatalkan reservasi ini');
+        }
+
+        if ($reservation->status !== ReservationStatus::Pending->value) {
+            abort(422, 'Hanya reservasi dengan status pending yang dapat dibatalkan');
+        }
+
+        $reservation->update(['status' => ReservationStatus::Batal->value]);
+        Cage::where('id', $reservation->cage_id)->update(['status' => 'tersedia']);
+
+        app(AuditService::class)->log(
+            action: 'reservations.cancel',
+            description: "User membatalkan reservasi {$reservation->uuid}",
+        );
+
+        return $reservation->load(['user', 'cat', 'service', 'cage']);
     }
 
     public function delete(int $id): void

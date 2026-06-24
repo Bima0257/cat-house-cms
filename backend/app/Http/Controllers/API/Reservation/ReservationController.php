@@ -59,6 +59,13 @@ class ReservationController extends Controller
         return $this->success($reservation, 'Reservation status updated');
     }
 
+    public function cancel(int $id)
+    {
+        $reservation = $this->reservationService->cancel($id);
+
+        return $this->success($reservation, 'Reservasi berhasil dibatalkan');
+    }
+
     public function destroy(int $id)
     {
         $this->reservationService->delete($id);

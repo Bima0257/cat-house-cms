@@ -1,5 +1,7 @@
 import api from './api';
 
+export const cancelReservation = (id) => api.post(`/api/reservations/${id}/cancel`);
+
 export const getReservations = (params) => api.get('/api/reservations', { params });
 export const getReservation = (id) => api.get(`/api/reservations/${id}`);
 export const createReservation = (data) => api.post('/api/reservations', data);

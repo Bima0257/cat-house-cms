@@ -69,9 +69,10 @@ const PaymentUpload = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors font-semibold"
+            disabled={mutation.isPending}
+            className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Kirim Pembayaran
+            {mutation.isPending ? 'Mengirim...' : 'Kirim Pembayaran'}
           </button>
         </form>
       </div>
