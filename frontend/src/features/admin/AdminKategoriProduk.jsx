@@ -71,12 +71,19 @@ const AdminKategoriProduk = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-kategori-produk'] });
       alert.success('Status kategori diubah');
     },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal mengubah status kategori');
+    },
   });
 
   const reorderMutation = useMutation({
     mutationFn: (items) => reorderKategoriProduk(items),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-kategori-produk'] });
+      alert.success('Urutan berhasil disimpan');
+    },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal menyimpan urutan');
     },
   });
 

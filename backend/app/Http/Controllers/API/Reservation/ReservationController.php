@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Reservation;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reservation\StoreReservationRequest;
+use App\Services\AuditService;
 use App\Services\ReservationService;
 use App\Traits\ApiResponse;
 
@@ -49,6 +50,11 @@ class ReservationController extends Controller
     {
         $status = request()->input('status');
         $reservation = $this->reservationService->updateStatus($id, $status);
+
+        app(AuditService::class)->log(
+            action: 'reservations.update-status',
+            description: "Mengubah status reservasi {$reservation->uuid} menjadi {$status}",
+        );
 
         return $this->success($reservation, 'Reservation status updated');
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\Auditable;
 use App\Traits\ImageUpload;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,7 +18,7 @@ class User extends Authenticatable
     use HasApiTokens;
 
     use HasFactory, HasRoles, Notifiable;
-    use ImageUpload;
+    use ImageUpload, Auditable;
 
     protected $guard_name = 'web';
 

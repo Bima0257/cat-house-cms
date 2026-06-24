@@ -42,6 +42,7 @@ import AdminProduk from '../features/admin/AdminProduk';
 import AdminReports from '../features/admin/AdminReports';
 import AdminSettings from '../features/admin/AdminSettings';
 import AdminDatabaseBackup from '../features/admin/AdminDatabaseBackup';
+import AdminAuditLogs from '../features/admin/AdminAuditLogs';
 
 import NotFound from '../features/landing/NotFound';
 
@@ -100,6 +101,7 @@ const router = createBrowserRouter([
       { path: 'reservations', element: <StaffReservations /> },
       { path: 'daily-reports', element: <DailyReports /> },
       { path: 'payments', element: <PaymentVerification /> },
+      { path: 'profile', element: <Profile /> },
     ],
   },
   // Admin routes
@@ -123,6 +125,8 @@ const router = createBrowserRouter([
       { path: 'reports', element: <AdminReports /> },
       { path: 'settings', element: <AdminSettings /> },
       { path: 'backup-database', element: <AdminDatabaseBackup /> },
+      { path: 'activity-logs', element: <AdminAuditLogs /> },
+      { path: 'profile', element: <Profile /> },
     ],
   },
   // 404

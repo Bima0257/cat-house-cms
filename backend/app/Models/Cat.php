@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cat extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, Auditable;
+
+    public function auditableName(): string
+    {
+        return $this->name;
+    }
 
     protected $fillable = [
         'uuid', 'user_id', 'name', 'breed', 'gender', 'birth_date',

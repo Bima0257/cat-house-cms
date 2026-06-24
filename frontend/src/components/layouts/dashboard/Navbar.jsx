@@ -5,7 +5,13 @@ import api from '../../../services/api';
 
 const Navbar = ({ setSidebarOpen }) => {
   const navigate = useNavigate();
-  const { user } = getAuthState();
+  const { user, roles } = getAuthState();
+
+  const profilePath = roles.includes('staff')
+    ? '/staff/profile'
+    : roles.includes('admin') || roles.includes('super_admin')
+      ? '/admin/profile'
+      : '/customer/profile';
 
   const handleLogout = async () => {
     try {
@@ -62,7 +68,7 @@ const Navbar = ({ setSidebarOpen }) => {
         <div className="h-8 w-[1px] bg-border-light"></div>
 
         {/* User Avatar */}
-        <button className="flex items-center gap-2 group">
+        <button onClick={() => navigate(profilePath)} className="flex items-center gap-2 group">
           <div className="w-9 h-9 rounded-xl bg-primary-fixed-dim flex items-center justify-center font-bold text-on-primary-fixed text-sm">
             {initials}
           </div>

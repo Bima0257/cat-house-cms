@@ -19,6 +19,9 @@ const PaymentVerification = () => {
       queryClient.invalidateQueries({ queryKey: ['all-payments'] });
       alert.success('Pembayaran diverifikasi');
     },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal memverifikasi pembayaran');
+    },
   });
 
   const rejectMutation = useMutation({
@@ -26,6 +29,9 @@ const PaymentVerification = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['all-payments'] });
       alert.success('Pembayaran ditolak');
+    },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal menolak pembayaran');
     },
   });
 

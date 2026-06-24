@@ -27,6 +27,9 @@ const StaffReservations = () => {
       queryClient.invalidateQueries({ queryKey: ['staff-reservations-all'] });
       alert.success('Status reservasi berhasil diupdate');
     },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal mengupdate status reservasi');
+    },
   });
 
   const reservations = data?.data || [];

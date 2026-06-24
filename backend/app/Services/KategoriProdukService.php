@@ -13,7 +13,7 @@ class KategoriProdukService
     {
         return KategoriProduk::query()
             ->when(isset($filters['search']), fn ($q) => $q->where('nama', 'like', "%{$filters['search']}%"))
-            ->when(isset($filters['is_active']), fn ($q) => $q->where('is_active', $filters['is_active']))
+            ->when(isset($filters['is_active']), fn ($q) => $q->where('is_active', filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN)))
             ->orderBy('sort_order')
             ->latest('sort_order')
             ->paginate($filters['per_page'] ?? 10);

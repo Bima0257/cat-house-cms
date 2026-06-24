@@ -69,6 +69,9 @@ const AdminServices = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-services'] });
       alert.success('Status layanan diubah');
     },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal mengubah status layanan');
+    },
   });
 
   const resetForm = () => {

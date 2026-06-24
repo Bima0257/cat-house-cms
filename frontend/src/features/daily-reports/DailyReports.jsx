@@ -35,6 +35,9 @@ const DailyReports = () => {
       alert.success('Laporan harian berhasil dibuat');
       setShowForm(false);
     },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal membuat laporan harian');
+    },
   });
 
   const handleSubmit = (e) => {

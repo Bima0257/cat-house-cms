@@ -16,6 +16,9 @@ const PaymentUpload = () => {
       alert.success('Pembayaran berhasil dikirim, menunggu verifikasi');
       navigate('/customer/payments');
     },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal mengirim pembayaran');
+    },
   });
 
   const handleSubmit = (e) => {

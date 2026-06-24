@@ -14,7 +14,7 @@ class ProdukService
         return Produk::query()
             ->with('kategori')
             ->when(isset($filters['search']), fn ($q) => $q->where('nama', 'like', "%{$filters['search']}%"))
-            ->when(isset($filters['is_active']), fn ($q) => $q->where('is_active', $filters['is_active']))
+            ->when(isset($filters['is_active']), fn ($q) => $q->where('is_active', filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN)))
             ->when(isset($filters['kategori_produk_id']), fn ($q) => $q->where('kategori_produk_id', $filters['kategori_produk_id']))
             ->latest()
             ->paginate($filters['per_page'] ?? 10);

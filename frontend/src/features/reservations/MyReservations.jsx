@@ -52,6 +52,15 @@ const MyReservations = () => {
       setShowForm(false);
       setForm({ cat_id: '', service_id: '', cage_id: '', check_in: '', check_out: '', note: '' });
     },
+    onError: (err) => {
+      const messages = err.response?.data?.errors;
+      if (messages) {
+        const first = Object.values(messages)[0]?.[0];
+        alert.error(first || 'Gagal membuat reservasi');
+      } else {
+        alert.error(err.response?.data?.message || 'Gagal membuat reservasi');
+      }
+    },
   });
 
   const handleSubmit = (e) => {

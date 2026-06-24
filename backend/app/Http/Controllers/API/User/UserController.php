@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
+use App\Services\AuditService;
 use App\Services\UserService;
 use App\Traits\ApiResponse;
 
@@ -54,6 +55,12 @@ class UserController extends Controller
     public function toggleActive(int $id)
     {
         $user = $this->userService->toggleActive($id);
+        $status = $user->is_active ? 'diaktifkan' : 'dinonaktifkan';
+
+        app(AuditService::class)->log(
+            action: 'users.toggle-active',
+            description: "User {$status}: {$user->name} ({$user->email})",
+        );
 
         return $this->success($user, 'User status updated');
     }

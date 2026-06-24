@@ -29,6 +29,7 @@ Route::get('/services/public', [ServiceController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/me', [AuthController::class, 'updateProfile']);
 
     // Dashboard
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
@@ -57,6 +58,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payments/{id}/reject', [PaymentController::class, 'reject'])
         ->middleware('permission:payments.reject');
 
+    // Services & Cages (read for all authenticated users)
+    Route::get('/services', [ServiceController::class, 'index']);
+    Route::get('/services/{id}', [ServiceController::class, 'show']);
+    Route::get('/cages', [CageController::class, 'index']);
+    Route::get('/cages/{id}', [CageController::class, 'show']);
+
     // Daily Reports (staff)
     Route::middleware('permission:daily-reports.index|daily-reports.view|daily-reports.create|daily-reports.update')->group(function () {
         Route::get('/daily-reports', [DailyReportController::class, 'index']);
@@ -71,11 +78,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/users/{id}/toggle-active', [UserController::class, 'toggleActive'])
             ->middleware('permission:users.toggle-active');
 
-        Route::apiResource('services', ServiceController::class)->except(['edit', 'create']);
+        Route::post('/services', [ServiceController::class, 'store']);
+        Route::put('/services/{id}', [ServiceController::class, 'update']);
+        Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
         Route::patch('/services/{id}/toggle-active', [ServiceController::class, 'toggleActive'])
             ->middleware('permission:services.toggle-active');
 
-        Route::apiResource('cages', CageController::class)->except(['edit', 'create']);
+        Route::post('/cages', [CageController::class, 'store']);
+        Route::put('/cages/{id}', [CageController::class, 'update']);
+        Route::delete('/cages/{id}', [CageController::class, 'destroy']);
 
         Route::apiResource('kategori-produk', KategoriProdukController::class)->except(['edit', 'create']);
         Route::patch('/kategori-produk/{id}/toggle-active', [KategoriProdukController::class, 'toggleActive']);
@@ -98,9 +109,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/permission-categories/{id}/permissions/{permissionId}', [PermissionCategoryController::class, 'removePermission']);
     });
 
-    // Backup database (super admin only)
+    // Backup & Restore database (super admin only)
     Route::get('/backup-database', [\App\Http\Controllers\API\Backup\BackupController::class, 'download'])
         ->middleware('role:super_admin');
+    Route::post('/restore-database', [\App\Http\Controllers\API\Backup\BackupController::class, 'restore'])
+        ->middleware('role:super_admin');
+
+    // Audit logs (super admin only)
+    Route::middleware('role:super_admin')->group(function () {
+        Route::get('/activity-logs', [\App\Http\Controllers\API\AuditLog\AuditLogController::class, 'index']);
+        Route::get('/activity-logs/actions', [\App\Http\Controllers\API\AuditLog\AuditLogController::class, 'actions']);
+    });
 
     // Roles management (accessible by staff too for user role)
     Route::middleware('permission:roles.index|roles.view|roles.update')->group(function () {

@@ -25,6 +25,9 @@ const MyCats = () => {
       setShowForm(false);
       setForm({ name: '', breed: '', gender: '', birth_date: '', weight: '', color: '', vaccination_status: 'belum', medical_note: '' });
     },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal menambahkan kucing');
+    },
   });
 
   const deleteMutation = useMutation({
@@ -32,6 +35,9 @@ const MyCats = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-cats'] });
       alert.success('Kucing berhasil dihapus');
+    },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal menghapus kucing');
     },
   });
 

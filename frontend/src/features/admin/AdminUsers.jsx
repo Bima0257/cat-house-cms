@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getUsers, deleteUser, toggleUserActive, createUser } from '../../services/users';
+import { getUsers, deleteUser, toggleUserActive, createUser, updateUser } from '../../services/users';
 import alert from '../../lib/alert';
 import DataTable from '../../components/ui/DataTable';
 import {
@@ -8,13 +8,15 @@ import {
   IconToggleLeft,
   IconToggleRight,
   IconPlus,
+  IconEdit,
 } from '@tabler/icons-react';
 import { Button } from '../../components/ui/button';
 
 const AdminUsers = () => {
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'user' });
+  const [editingId, setEditingId] = useState(null);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', role: 'user' });
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-users'],
@@ -29,11 +31,22 @@ const AdminUsers = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
       alert.success('User berhasil ditambahkan');
-      setShowForm(false);
-      setForm({ name: '', email: '', password: '', role: 'user' });
+      resetForm();
     },
     onError: (err) => {
       alert.error(err.response?.data?.message || 'Gagal menambahkan user');
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => updateUser(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      alert.success('User berhasil diupdate');
+      resetForm();
+    },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal mengupdate user');
     },
   });
 
@@ -42,6 +55,9 @@ const AdminUsers = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
       alert.success('Status user diubah');
+    },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal mengubah status user');
     },
   });
 
@@ -58,7 +74,36 @@ const AdminUsers = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createMutation.mutate(form);
+    const fd = new FormData();
+    fd.append('name', form.name);
+    fd.append('email', form.email);
+    if (form.phone) fd.append('phone', form.phone);
+    fd.append('role', form.role);
+    if (form.password) fd.append('password', form.password);
+    if (editingId) {
+      fd.append('_method', 'PUT');
+      updateMutation.mutate({ id: editingId, data: fd });
+    } else {
+      createMutation.mutate(fd);
+    }
+  };
+
+  const handleEdit = (user) => {
+    setEditingId(user.id);
+    setForm({
+      name: user.name,
+      email: user.email,
+      phone: user.phone || '',
+      password: '',
+      role: user.roles?.[0]?.name || 'user',
+    });
+    setShowForm(true);
+  };
+
+  const resetForm = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setForm({ name: '', email: '', phone: '', password: '', role: 'user' });
   };
 
   const users = data?.data || [];
@@ -140,6 +185,17 @@ const AdminUsers = () => {
             type="button"
             onClick={(e) => {
               e.stopPropagation();
+              handleEdit(user);
+            }}
+            className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors"
+            title="Edit"
+          >
+            <IconEdit size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
               toggleMutation.mutate(user.id);
             }}
             className={`p-2 rounded-lg transition-colors ${
@@ -181,7 +237,9 @@ const AdminUsers = () => {
       {/* Create User Form */}
       {showForm && (
         <div className="bg-white rounded-xl border border-border-light p-6">
-          <h2 className="font-semibold text-lg text-text-dark mb-4">Tambah User Baru</h2>
+          <h2 className="font-semibold text-lg text-text-dark mb-4">
+            {editingId ? 'Edit User' : 'Tambah User Baru'}
+          </h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-text-dark mb-1.5">Nama Lengkap *</label>
@@ -206,14 +264,26 @@ const AdminUsers = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-dark mb-1.5">Password *</label>
+              <label className="block text-sm font-medium text-text-dark mb-1.5">Nomor HP</label>
+              <input
+                type="text"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                className="w-full px-4 py-2.5 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="0812xxxxx"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-text-dark mb-1.5">
+                Password {editingId ? '(kosongkan jika tidak diubah)' : '*'}
+              </label>
               <input
                 type="password"
-                required
+                required={!editingId}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full px-4 py-2.5 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                placeholder="Min. 8 karakter"
+                placeholder={editingId ? 'Biarkan kosong jika tidak diubah' : 'Min. 8 karakter'}
               />
             </div>
             <div>
@@ -231,14 +301,16 @@ const AdminUsers = () => {
             <div className="md:col-span-2 flex gap-2">
               <Button
                 type="submit"
-                disabled={createMutation.isPending}
+                disabled={createMutation.isPending || updateMutation.isPending}
                 className="bg-primary hover:bg-primary/90 text-white"
               >
-                {createMutation.isPending ? 'Menyimpan...' : 'Simpan'}
+                {createMutation.isPending || updateMutation.isPending
+                  ? 'Menyimpan...'
+                  : editingId ? 'Update' : 'Simpan'}
               </Button>
               <Button
                 type="button"
-                onClick={() => setShowForm(false)}
+                onClick={resetForm}
                 className="bg-gray-100 hover:bg-gray-200 text-text-dark"
               >
                 Batal

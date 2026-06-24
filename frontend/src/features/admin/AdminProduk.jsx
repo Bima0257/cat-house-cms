@@ -88,6 +88,9 @@ const AdminProduk = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-produk'] });
       alert.success('Status produk diubah');
     },
+    onError: (err) => {
+      alert.error(err.response?.data?.message || 'Gagal mengubah status produk');
+    },
   });
 
   const resetForm = () => {

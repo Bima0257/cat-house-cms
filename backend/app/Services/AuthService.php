@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Mail\VerifyEmailCode;
 use App\Models\User;
+use App\Services\AuditService;
+use App\Traits\ImageUpload;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -12,6 +14,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
+    use ImageUpload;
     public function login($data)
     {
         $key = ($data['email'] ?? 'guest') . '|' . request()->ip();
@@ -55,6 +58,12 @@ class AuthService
 
         $token = $user->createToken('auth-token')->plainTextToken;
 
+        app(AuditService::class)->log(
+            action: 'auth.login',
+            description: "User login: {$user->email}",
+            userId: $user->id,
+        );
+
         return [
             'token' => $token,
             'user' => $user->load('roles'),
@@ -89,6 +98,10 @@ class AuthService
     {
         $user = request()->user();
         if ($user) {
+            app(AuditService::class)->log(
+                action: 'auth.logout',
+                description: "User logout: {$user->email}",
+            );
             $user->currentAccessToken()->delete();
         }
     }
@@ -165,5 +178,30 @@ class AuthService
             'roles' => $user->getRoleNames(),
             'permissions' => $user->getAllPermissions()->pluck('name'),
         ];
+    }
+
+    public function updateProfile(array $data): User
+    {
+        $user = request()->user();
+
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        if (isset($data['avatar'])) {
+            $this->deleteImage($user->avatar);
+            $data['avatar'] = $this->uploadImage($data['avatar'], 'avatars');
+        }
+
+        $user->update($data);
+
+        app(AuditService::class)->log(
+            action: 'profile.update',
+            description: "User mengupdate profil: {$user->email}",
+        );
+
+        return $user->fresh();
     }
 }

@@ -23,6 +23,7 @@ import {
   IconCategory,
   IconPackage,
   IconDatabase,
+  IconNotebook,
   IconLogout,
 } from '@tabler/icons-react';
 
@@ -45,6 +46,7 @@ const iconMap = {
   category: IconCategory,
   package: IconPackage,
   database: IconDatabase,
+  notebook: IconNotebook,
 };
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
@@ -71,8 +73,16 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         {
           label: 'Reservasi',
           items: [
-            { name: 'Reservasi', path: '/customer/reservations', icon: 'calendar_month' },
-            { name: 'Pembayaran', path: '/customer/payments', icon: 'payments' },
+            {
+              name: 'Reservasi',
+              path: '/customer/reservations',
+              icon: 'calendar_month',
+            },
+            {
+              name: 'Pembayaran',
+              path: '/customer/payments',
+              icon: 'payments',
+            },
             { name: 'Riwayat', path: '/customer/history', icon: 'history' },
           ],
         },
@@ -85,14 +95,27 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           label: 'Utama',
           items: [
             { name: 'Dashboard', path: '/staff', icon: 'dashboard' },
+            { name: 'Profil', path: '/staff/profile', icon: 'person' },
           ],
         },
         {
           label: 'Operasional',
           items: [
-            { name: 'Reservasi', path: '/staff/reservations', icon: 'calendar_month' },
-            { name: 'Laporan Harian', path: '/staff/daily-reports', icon: 'description' },
-            { name: 'Verifikasi Bayar', path: '/staff/payments', icon: 'verified' },
+            {
+              name: 'Reservasi',
+              path: '/staff/reservations',
+              icon: 'calendar_month',
+            },
+            {
+              name: 'Laporan Harian',
+              path: '/staff/daily-reports',
+              icon: 'description',
+            },
+            {
+              name: 'Verifikasi Bayar',
+              path: '/staff/payments',
+              icon: 'verified',
+            },
           ],
         },
       ];
@@ -103,6 +126,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         label: 'Utama',
         items: [
           { name: 'Dashboard', path: '/admin', icon: 'dashboard' },
+          { name: 'Profil', path: '/admin/profile', icon: 'person' },
         ],
       },
       {
@@ -111,7 +135,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           { name: 'Pengguna', path: '/admin/users', icon: 'group' },
           { name: 'Roles', path: '/admin/roles', icon: 'lock' },
           { name: 'Permissions', path: '/admin/permissions', icon: 'security' },
-          { name: 'Kategori Permission', path: '/admin/permission-categories', icon: 'category' },
+          {
+            name: 'Kategori Permission',
+            path: '/admin/permission-categories',
+            icon: 'category',
+          },
         ],
       },
       {
@@ -119,7 +147,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         items: [
           { name: 'Layanan', path: '/admin/services', icon: 'build' },
           { name: 'Kandang', path: '/admin/cages', icon: 'home' },
-          { name: 'Kategori Produk', path: '/admin/kategori-produk', icon: 'category' },
+          {
+            name: 'Kategori Produk',
+            path: '/admin/kategori-produk',
+            icon: 'category',
+          },
           { name: 'Produk', path: '/admin/produk', icon: 'package' },
         ],
       },
@@ -127,12 +159,28 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         label: 'Laporan',
         items: [
           { name: 'Laporan', path: '/admin/reports', icon: 'bar_chart' },
-          { name: 'Pengaturan', path: '/admin/settings', icon: 'settings' },
           ...(roles.includes('super_admin')
-            ? [{ name: 'Backup Database', path: '/admin/backup-database', icon: 'database' }]
+            ? [
+                {
+                  name: 'Database',
+                  path: '/admin/backup-database',
+                  icon: 'database',
+                },
+              ]
             : []),
+          { name: 'Pengaturan', path: '/admin/settings', icon: 'settings' },
         ],
       },
+      ...(roles.includes('super_admin')
+        ? [
+            {
+              label: 'Sistem',
+              items: [
+                { name: 'Audit Log', path: '/admin/activity-logs', icon: 'notebook' },
+              ],
+            },
+          ]
+        : []),
     ];
   }, [role, roles]);
 
@@ -153,24 +201,25 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
       >
         {/* Logo / Branding */}
-        <div className="p-6">
-          <h1 className="font-hero-display text-h2-section text-primary-fixed">
+        <div className='p-6'>
+          <h1 className='font-hero-display text-h2-section text-primary-fixed'>
             Papfum
           </h1>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 mt-4 overflow-y-auto scrollbar-thin">
+        <nav className='flex-1 mt-4 overflow-y-auto scrollbar-thin'>
           {menuSections.map((section) => (
             <div key={section.label}>
-              <p className="px-6 text-[10px] font-ui-label tracking-widest uppercase text-white/30 mt-5 mb-1">
+              <p className='px-6 text-[10px] font-ui-label tracking-widest uppercase text-white/30 mt-5 mb-1'>
                 {section.label}
               </p>
-              <ul className="space-y-0.5">
+              <ul className='space-y-0.5'>
                 {section.items.map((item, index) => {
-                  const IconComponent = iconMap[item.icon] || IconLayoutDashboard;
+                  const IconComponent =
+                    iconMap[item.icon] || IconLayoutDashboard;
                   return (
-                    <li key={index} className="group">
+                    <li key={index} className='group'>
                       <NavLink
                         to={item.path}
                         end
@@ -183,10 +232,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                           }`
                         }
                       >
-                        <span className="w-5 flex items-center justify-center">
+                        <span className='w-5 flex items-center justify-center'>
                           <IconComponent size={20} />
                         </span>
-                        <span className="font-ui-label text-sm">{item.name}</span>
+                        <span className='font-ui-label text-sm'>
+                          {item.name}
+                        </span>
                       </NavLink>
                     </li>
                   );
@@ -197,25 +248,31 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         </nav>
 
         {/* User Profile / Logout */}
-        <div className="p-6 border-t border-white/10">
-          <div className="flex items-center space-x-3 opacity-80">
-            <div className="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
+        <div className='p-6 border-t border-white/10'>
+          <div className='flex items-center space-x-3 opacity-80'>
+            <div className='w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden'>
               {user?.avatar ? (
-                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className='w-full h-full object-cover'
+                />
               ) : (
-                <IconPaw size={16} className="text-secondary" />
+                <IconPaw size={16} className='text-secondary' />
               )}
             </div>
-            <div className="flex-1 overflow-hidden">
-              <p className="text-xs font-semibold truncate">{user?.name || 'User'}</p>
-              <p className="text-[10px] text-white/50 truncate capitalize">
+            <div className='flex-1 overflow-hidden'>
+              <p className='text-xs font-semibold truncate'>
+                {user?.name || 'User'}
+              </p>
+              <p className='text-[10px] text-white/50 truncate capitalize'>
                 {role === 'super_admin' ? 'Super Admin' : role}
               </p>
             </div>
             <button
               onClick={handleLogout}
-              className="hover:text-primary transition-colors"
-              title="Logout"
+              className='hover:text-primary transition-colors'
+              title='Logout'
             >
               <IconLogout size={18} />
             </button>
@@ -227,7 +284,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/50 z-10 lg:hidden"
+          className='fixed inset-0 bg-black/50 z-10 lg:hidden'
         />
       )}
     </>
