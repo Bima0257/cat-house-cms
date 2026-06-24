@@ -41,6 +41,7 @@ import AdminKategoriProduk from '../features/admin/AdminKategoriProduk';
 import AdminProduk from '../features/admin/AdminProduk';
 import AdminReports from '../features/admin/AdminReports';
 import AdminSettings from '../features/admin/AdminSettings';
+import AdminDatabaseBackup from '../features/admin/AdminDatabaseBackup';
 
 import NotFound from '../features/landing/NotFound';
 
@@ -121,6 +122,7 @@ const router = createBrowserRouter([
       { path: 'produk', element: <AdminProduk /> },
       { path: 'reports', element: <AdminReports /> },
       { path: 'settings', element: <AdminSettings /> },
+      { path: 'backup-database', element: <AdminDatabaseBackup /> },
     ],
   },
   // 404

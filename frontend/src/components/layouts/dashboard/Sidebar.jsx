@@ -22,6 +22,7 @@ import {
   IconSettings,
   IconCategory,
   IconPackage,
+  IconDatabase,
   IconLogout,
 } from '@tabler/icons-react';
 
@@ -43,6 +44,7 @@ const iconMap = {
   settings: IconSettings,
   category: IconCategory,
   package: IconPackage,
+  database: IconDatabase,
 };
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
@@ -126,10 +128,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         items: [
           { name: 'Laporan', path: '/admin/reports', icon: 'bar_chart' },
           { name: 'Pengaturan', path: '/admin/settings', icon: 'settings' },
+          ...(roles.includes('super_admin')
+            ? [{ name: 'Backup Database', path: '/admin/backup-database', icon: 'database' }]
+            : []),
         ],
       },
     ];
-  }, [role]);
+  }, [role, roles]);
 
   const handleLogout = async () => {
     try {

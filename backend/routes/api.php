@@ -98,6 +98,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/permission-categories/{id}/permissions/{permissionId}', [PermissionCategoryController::class, 'removePermission']);
     });
 
+    // Backup database (super admin only)
+    Route::get('/backup-database', [\App\Http\Controllers\API\Backup\BackupController::class, 'download'])
+        ->middleware('role:super_admin');
+
     // Roles management (accessible by staff too for user role)
     Route::middleware('permission:roles.index|roles.view|roles.update')->group(function () {
         Route::get('/roles', [RolePermissionController::class, 'index']);

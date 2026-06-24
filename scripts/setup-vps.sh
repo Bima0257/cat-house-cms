@@ -4,7 +4,7 @@ export TZ=Asia/Jakarta
 
 # Domain configuration - GANTI INI DENGAN DOMAIN KAMU
 DOMAIN="leondev.my.id"
-EMAIL="admin@leondev.my.id"  # Email untuk Let's Encrypt notifications
+EMAIL="leondev572@gmail.com"  # Email untuk Let's Encrypt notifications
 
 echo "========== Cat House CMS — VPS Setup =========="
 

@@ -139,7 +139,7 @@ const Login = () => {
         <div className="text-on-primary max-w-md">
           <div className="flex items-center gap-3 mb-8">
             <IconPaw size={40} className="text-primary-fixed" stroke={1.5} />
-            <h1 className="font-hero-display text-h3-card text-primary-fixed">Papfum</h1>
+            <h1 className="font-hero-display text-h3-card text-primary-fixed">Cat House</h1>
           </div>
           <h2 className="font-h2-section text-[32px] text-on-primary mb-6">Selamat Datang Kembali!</h2>
           <ul className="space-y-4">
