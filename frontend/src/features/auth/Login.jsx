@@ -4,7 +4,6 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { loginApi } from '../../services/auth';
 import { setAuthState } from '../../hooks/useAuth';
 import {
-  IconPaw,
   IconDeviceMobile,
   IconCalendar,
   IconFileDescription,
@@ -137,9 +136,12 @@ const Login = () => {
     <div className="min-h-screen flex font-body-main">
       <div className="hidden lg:flex w-1/2 bg-on-secondary-fixed items-center justify-center p-12">
         <div className="text-on-primary max-w-md">
-          <div className="flex items-center gap-3 mb-8">
-            <IconPaw size={40} className="text-primary-fixed" stroke={1.5} />
-            <h1 className="font-hero-display text-h3-card text-primary-fixed">Cat House</h1>
+          <div className="flex items-center">
+            <img
+              src="/images/logo.png"
+              alt="Cat House"
+              className="h-40 w-auto ml-3"
+            />
           </div>
           <h2 className="font-h2-section text-[32px] text-on-primary mb-6">Selamat Datang Kembali!</h2>
           <ul className="space-y-4">
@@ -158,9 +160,12 @@ const Login = () => {
 
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-surface">
         <div className="w-full max-w-md">
-          <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
-            <IconPaw size={32} className="text-primary" stroke={1.5} />
-            <h1 className="font-hero-display text-h3-card text-primary">Papfum</h1>
+          <div className="lg:hidden flex items-center mb-8 justify-center">
+            <img
+              src="/images/logo.png"
+              alt="Cat House"
+              className="h-10 w-auto"
+            />
           </div>
 
           <h2 className="font-h3-card text-[24px] text-text-dark mb-2">Masuk</h2>

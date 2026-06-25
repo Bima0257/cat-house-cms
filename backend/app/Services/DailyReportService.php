@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\DailyReport;
+use App\Models\Reservation;
 use App\Traits\ImageUpload;
 
 class DailyReportService
@@ -34,6 +35,15 @@ class DailyReportService
         }
 
         return DailyReport::create($data);
+    }
+
+    public function getByReservationForUser(int $reservationId, int $userId)
+    {
+        $reservation = Reservation::where('id', $reservationId)->where('user_id', $userId)->firstOrFail();
+
+        return DailyReport::where('reservation_id', $reservationId)
+            ->orderBy('report_date')
+            ->get();
     }
 
     public function update(int $id, array $data): DailyReport

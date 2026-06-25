@@ -1,27 +1,37 @@
-import { useState, useEffect } from 'react';
-import { getAuthState, useAuth } from '../../hooks/useAuth';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getAuthState } from '../../hooks/useAuth';
 import { updateProfileApi } from '../../services/auth';
 import alert from '../../lib/alert';
-import { IconUser, IconPhoto, IconCamera } from '@tabler/icons-react';
+import { IconUser, IconCamera } from '@tabler/icons-react';
 
 const Profile = () => {
-  const { user } = getAuthState();
-  const { refreshUser } = useAuth();
+  const authState = getAuthState();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
   const [avatar, setAvatar] = useState(null);
   const [preview, setPreview] = useState(null);
   const [saving, setSaving] = useState(false);
 
+  // Use ref to track user ID instead of full object reference
+  const userIdRef = useRef(authState.user?.id);
+
+  // Memoize user data to prevent unnecessary re-renders
+  const user = useMemo(() => authState.user, [authState.user?.id, authState.user?.updated_at]);
+
   useEffect(() => {
     if (user) {
-      setForm({
-        name: user.name || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        password: '',
-      });
-      if (user.avatar) {
-        setPreview(`/storage/${user.avatar}`);
+      // Only update form if user ID changed (new user data from server)
+      if (userIdRef.current !== user.id) {
+        userIdRef.current = user.id;
+        setForm({
+          name: user.name || '',
+          email: user.email || '',
+          phone: user.phone || '',
+          password: '',
+        });
+        setPreview(user.avatar ? `/storage/${user.avatar}` : null);
+        setAvatar(null);
       }
     }
   }, [user]);
@@ -46,10 +56,12 @@ const Profile = () => {
       if (avatar) fd.append('avatar', avatar);
       fd.append('_method', 'PUT');
       await updateProfileApi(fd);
-      await refreshUser();
       alert.success('Profil berhasil diupdate');
+      // Reset form state without full page reload
       setForm((prev) => ({ ...prev, password: '' }));
       setAvatar(null);
+      // Navigate to refresh current route data
+      navigate(0);
     } catch (err) {
       alert.error(err.response?.data?.message || 'Gagal mengupdate profil');
     } finally {

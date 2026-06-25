@@ -29,9 +29,9 @@ trait ApiResponse
         return response()->json($response, $code);
     }
 
-    protected function paginated(mixed $data, string $message = 'Success'): JsonResponse
+    protected function paginated(mixed $data, string $message = 'Success', ?array $extra = null): JsonResponse
     {
-        return response()->json([
+        $response = [
             'success' => true,
             'message' => $message,
             'data' => $data->items(),
@@ -41,6 +41,12 @@ trait ApiResponse
                 'per_page' => $data->perPage(),
                 'total' => $data->total(),
             ],
-        ]);
+        ];
+
+        if ($extra) {
+            $response['extra'] = $extra;
+        }
+
+        return response()->json($response);
     }
 }

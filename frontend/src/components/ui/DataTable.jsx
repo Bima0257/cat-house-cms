@@ -43,13 +43,13 @@ const DataTable = ({
   // Build columns from customColumns prop or use default
   const columns = useMemo(() => {
     if (customColumns?.length > 0) {
-      return customColumns.map((col) =>
+      return customColumns.map((col, index) =>
         columnHelper.accessor(col.accessor || col.key, {
           id: col.key,
           header: col.header,
           cell: (info) =>
             col.render ? col.render(info.row.original) : info.getValue(),
-          size: col.width,
+          size: typeof col.width === 'number' ? col.width : 150,
           enableSorting: col.enableSorting !== false,
         })
       );
@@ -143,7 +143,7 @@ const DataTable = ({
                   <th
                     key={header.id}
                     className="px-5 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide text-left whitespace-nowrap"
-                    style={{ width: header.getSize() }}
+                    style={{ width: header.getSize() || undefined }}
                   >
                     {header.isPlaceholder ? null : (
                       <div

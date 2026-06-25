@@ -8,3 +8,5 @@ export const createDailyReport = (data) => api.post('/api/daily-reports', data, 
 export const updateDailyReport = (id, data) => api.post(`/api/daily-reports/${id}`, data, {
   headers: { 'Content-Type': 'multipart/form-data' },
 });
+export const getDailyReportsByReservation = (reservationId) =>
+  api.get(`/api/reservations/${reservationId}/daily-reports`);

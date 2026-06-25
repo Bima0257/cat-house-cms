@@ -134,12 +134,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         items: [
           { name: 'Pengguna', path: '/admin/users', icon: 'group' },
           { name: 'Roles', path: '/admin/roles', icon: 'lock' },
-          { name: 'Permissions', path: '/admin/permissions', icon: 'security' },
-          {
-            name: 'Kategori Permission',
-            path: '/admin/permission-categories',
-            icon: 'category',
-          },
         ],
       },
       {
@@ -176,6 +170,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             {
               label: 'Sistem',
               items: [
+                { name: 'Permissions', path: '/admin/permissions', icon: 'security' },
+                {
+                  name: 'Kategori Permission',
+                  path: '/admin/permission-categories',
+                  icon: 'category',
+                },
                 { name: 'Audit Log', path: '/admin/activity-logs', icon: 'notebook' },
               ],
             },
@@ -201,10 +201,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
       >
         {/* Logo / Branding */}
-        <div className='p-6'>
-          <h1 className='font-hero-display text-h2-section text-primary-fixed'>
-            Papfum
-          </h1>
+        <div className='p-0'>
+          <img
+            src="/images/logo.png"
+            alt="Cat House"
+            className="h-20 w-auto ml-2"
+          />
         </div>
 
         {/* Navigation */}
@@ -222,7 +224,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     <li key={index} className='group'>
                       <NavLink
                         to={item.path}
-                        end
+                        end={index === 0} // Only apply 'end' to the first item (Dashboard) in each section
+                        onClick={() => setIsOpen(false)}
                         className={({ isActive }) =>
                           `flex items-center px-6 py-3 space-x-3 transition-all duration-200
                           ${

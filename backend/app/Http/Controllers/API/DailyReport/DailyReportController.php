@@ -43,4 +43,11 @@ class DailyReportController extends Controller
 
         return $this->success($report, 'Daily report updated successfully');
     }
+
+    public function getByReservation(int $id)
+    {
+        $reports = $this->dailyReportService->getByReservationForUser($id, auth()->id());
+
+        return $this->success($reports);
+    }
 }

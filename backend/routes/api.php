@@ -73,6 +73,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/daily-reports/{id}', [DailyReportController::class, 'update']);
     });
 
+    // Daily Reports by reservation (user can view their own)
+    Route::get('/reservations/{id}/daily-reports', [DailyReportController::class, 'getByReservation']);
+
     // Admin only routes
     Route::middleware('role:admin|super_admin')->group(function () {
         Route::apiResource('users', UserController::class)->except(['edit', 'create']);
@@ -96,6 +99,26 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('produk', ProdukController::class)->except(['edit', 'create']);
         Route::patch('/produk/{id}/toggle-active', [ProdukController::class, 'toggleActive']);
 
+    });
+
+    // Reports (admin & super admin)
+    Route::middleware('role:admin|super_admin')->group(function () {
+        Route::get('/reports/reservations', [\App\Http\Controllers\API\Report\ReportController::class, 'reservations']);
+        Route::get('/reports/reservations/export', [\App\Http\Controllers\API\Report\ReportController::class, 'exportReservationsPdf']);
+        Route::get('/reports/financial', [\App\Http\Controllers\API\Report\ReportController::class, 'financial']);
+        Route::get('/reports/financial/export', [\App\Http\Controllers\API\Report\ReportController::class, 'exportFinancialPdf']);
+        Route::get('/reports/cats', [\App\Http\Controllers\API\Report\ReportController::class, 'cats']);
+        Route::get('/reports/cats/export', [\App\Http\Controllers\API\Report\ReportController::class, 'exportCatsPdf']);
+    });
+
+    // Backup & Restore database (super admin only)
+    Route::get('/backup-database', [\App\Http\Controllers\API\Backup\BackupController::class, 'download'])
+        ->middleware('role:super_admin');
+    Route::post('/restore-database', [\App\Http\Controllers\API\Backup\BackupController::class, 'restore'])
+        ->middleware('role:super_admin');
+
+    // Permissions & Permission Categories (super admin only)
+    Route::middleware('role:super_admin')->group(function () {
         Route::get('/permissions', [PermissionController::class, 'index']);
         Route::post('/permissions', [PermissionController::class, 'store']);
         Route::put('/permissions/{id}', [PermissionController::class, 'update']);
@@ -109,12 +132,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/permission-categories/{id}/assign', [PermissionCategoryController::class, 'assignPermission']);
         Route::delete('/permission-categories/{id}/permissions/{permissionId}', [PermissionCategoryController::class, 'removePermission']);
     });
-
-    // Backup & Restore database (super admin only)
-    Route::get('/backup-database', [\App\Http\Controllers\API\Backup\BackupController::class, 'download'])
-        ->middleware('role:super_admin');
-    Route::post('/restore-database', [\App\Http\Controllers\API\Backup\BackupController::class, 'restore'])
-        ->middleware('role:super_admin');
 
     // Audit logs (super admin only)
     Route::middleware('role:super_admin')->group(function () {

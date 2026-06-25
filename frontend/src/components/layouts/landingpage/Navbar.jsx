@@ -1,6 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
 import {
-  IconPaw,
   IconLogin,
   IconUserPlus,
 } from '@tabler/icons-react';
@@ -18,9 +17,12 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-border-light">
       <div className="max-w-container-max mx-auto px-gutter py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2">
-          <IconPaw className="text-primary text-3xl" size={32} fill="currentColor" />
-          <span className="font-hero-display text-h3-card text-primary">Cat House</span>
+        <Link to="/" className="flex items-center">
+          <img
+            src="/images/logo.png"
+            alt="Cat House"
+            className="h-12 w-auto"
+          />
         </Link>
 
         <nav className="hidden md:flex items-center gap-7">

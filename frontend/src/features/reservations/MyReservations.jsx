@@ -5,6 +5,7 @@ import {
   createReservation,
   cancelReservation,
 } from '../../services/reservations';
+import { getDailyReportsByReservation } from '../../services/dailyReports';
 import { getCats } from '../../services/cats';
 import { getServices } from '../../services/services';
 import { getCages } from '../../services/cages';
@@ -92,12 +93,44 @@ const MyReservations = () => {
     },
   });
 
+  const [expandedId, setExpandedId] = useState(null);
+  const [reportsMap, setReportsMap] = useState({});
+  const [loadingReport, setLoadingReport] = useState({});
+
+  const handleToggleReports = async (reservationId) => {
+    if (expandedId === reservationId) {
+      setExpandedId(null);
+      return;
+    }
+    setExpandedId(reservationId);
+    if (!reportsMap[reservationId]) {
+      setLoadingReport((prev) => ({ ...prev, [reservationId]: true }));
+      try {
+        const res = await getDailyReportsByReservation(reservationId);
+        setReportsMap((prev) => ({
+          ...prev,
+          [reservationId]: res.data?.data || [],
+        }));
+      } catch {
+        alert.error('Gagal memuat laporan harian');
+      } finally {
+        setLoadingReport((prev) => ({ ...prev, [reservationId]: false }));
+      }
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     createMutation.mutate(form);
   };
 
   const reservations = reservationsData?.data || [];
+
+  const conditionColors = {
+    sehat: 'bg-green-100 text-green-700',
+    sakit: 'bg-yellow-100 text-yellow-700',
+    cedera: 'bg-red-100 text-red-700',
+  };
 
   const statusColors = {
     pending: 'bg-yellow-100 text-yellow-700',
@@ -281,6 +314,53 @@ const MyReservations = () => {
                 >
                   {cancelMutation.isPending ? 'Membatalkan...' : 'Batalkan'}
                 </button>
+              </div>
+            )}
+
+            {(res.status === 'checkin' || res.status === 'checkout') && (
+              <div className='mt-3'>
+                <button
+                  onClick={() => handleToggleReports(res.id)}
+                  className='inline-flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 transition-colors'
+                >
+                  <span className={expandedId === res.id ? 'rotate-90 inline-block transition-transform' : 'inline-block transition-transform'}>▶</span>
+                  {loadingReport[res.id]
+                    ? 'Memuat laporan...'
+                    : `Lihat Laporan (${(reportsMap[res.id] || []).length})`}
+                </button>
+
+                {expandedId === res.id && reportsMap[res.id] && (
+                  <div className='mt-3 space-y-2'>
+                    {reportsMap[res.id].length === 0 && !loadingReport[res.id] && (
+                      <p className='text-sm text-gray-400 italic'>Belum ada laporan harian</p>
+                    )}
+                    {reportsMap[res.id].map((report) => (
+                      <div
+                        key={report.id}
+                        className='bg-gray-50 rounded-lg p-3 border border-gray-100'
+                      >
+                        <div className='flex items-center justify-between mb-2'>
+                          <span className='text-xs font-semibold text-gray-500'>
+                            {report.report_date}
+                          </span>
+                          <span
+                            className={`text-xs font-semibold px-2 py-0.5 rounded-full ${conditionColors[report.condition] || 'bg-gray-100 text-gray-700'}`}
+                          >
+                            {report.condition}
+                          </span>
+                        </div>
+                        <div className='grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-600'>
+                          <p>Makan: {report.food || '-'}</p>
+                          <p>Minum: {report.drink || '-'}</p>
+                          <p>Berat: {report.weight ? `${report.weight} kg` : '-'}</p>
+                          <p>Aktivitas: {report.activity || '-'}</p>
+                          {report.medicine && <p className='col-span-2'>Obat: {report.medicine}</p>}
+                          {report.note && <p className='col-span-2 text-gray-400 italic'>{report.note}</p>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

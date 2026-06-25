@@ -168,10 +168,10 @@ const AdminKategoriProduk = () => {
 
   const columns = [
     {
-      key: 'sort_order',
+      key: 'drag_handle',
       header: '',
       enableSorting: false,
-      width: '40px',
+      width: 40,
       render: (item) => (
         <div
           draggable
