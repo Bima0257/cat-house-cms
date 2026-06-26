@@ -1,17 +1,14 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { clearAuthState, getAuthState } from '../../hooks/useAuth';
 import { useIdleTimer } from '../../hooks/useIdleTimer';
 import { SESSION_TIMEOUT_MS, SESSION_GRACE_PERIOD_MS } from '../../constants/config';
 import { IconLock, IconClock } from '@tabler/icons-react';
 
 const SessionTimeout = () => {
-  const navigate = useNavigate();
-
   const handleExpired = useCallback(() => {
     clearAuthState();
-    navigate('/login', { replace: true });
-  }, [navigate]);
+    window.location.href = '/login';
+  }, []);
 
   const { isAuth } = getAuthState();
   const { showWarning, remaining, resetTimer } = useIdleTimer({
