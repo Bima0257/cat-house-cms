@@ -49,7 +49,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-border-light pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-body-small text-text-muted">© 2024 Cat House Pet Care. All rights reserved.</p>
+          <p className="text-body-small text-text-muted">&copy; {new Date().getFullYear()} Cat House Pet Care. All rights reserved.</p>
           <div className="flex gap-3">
             <button className="w-8 h-8 bg-surface-container rounded-lg flex items-center justify-center hover:bg-primary hover:text-white transition-all text-text-muted">
               <IconCamera size={16} />

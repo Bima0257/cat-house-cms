@@ -1,9 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { getAuthState } from '../../../hooks/useAuth';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { clearAuthState } from '../../../hooks/useAuth';
-import api from '../../../services/api';
+import { useLogout } from '../../../hooks/useLogout';
 import {
   IconLayoutDashboard,
   IconUser,
@@ -52,7 +50,7 @@ const iconMap = {
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const { roles, user } = getAuthState();
   const role = roles[0] || 'user';
-  const navigate = useNavigate();
+  const handleLogout = useLogout();
 
   const menuSections = useMemo(() => {
     if (role === 'user') {
@@ -183,16 +181,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         : []),
     ];
   }, [role, roles]);
-
-  const handleLogout = async () => {
-    try {
-      await api.post('/api/logout');
-    } catch {
-      // ignore
-    }
-    clearAuthState();
-    navigate('/login');
-  };
 
   return (
     <>

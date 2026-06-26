@@ -1,15 +1,14 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { getAuthState } from '../../hooks/useAuth';
+import { ROLE_DASHBOARD } from '../../constants/routes';
 
 const GuestRoute = () => {
   const { isAuth, roles } = getAuthState();
 
   if (!isAuth) return <Outlet />;
 
-  if (roles.includes('admin') || roles.includes('super_admin')) return <Navigate to='/admin' replace />;
-  if (roles.includes('staff')) return <Navigate to='/staff' replace />;
-
-  return <Navigate to='/customer' replace />;
+  const dashboard = ROLE_DASHBOARD[roles[0]] || ROLE_DASHBOARD.user;
+  return <Navigate to={dashboard} replace />;
 };
 
 export default GuestRoute;

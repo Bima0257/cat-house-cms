@@ -6,6 +6,8 @@ export const getUser = () => api.get('/api/me');
 export const registerApi = (data) => api.post('/api/register', data);
 export const verifyCodeApi = (data) => api.post('/api/verify-code', data);
 export const resendCodeApi = (email) => api.post('/api/resend-code', { email });
+export const forgotPasswordApi = (email) => api.post('/api/forgot-password', { email });
+export const resetPasswordApi = (data) => api.post('/api/reset-password', data);
 export const updateProfileApi = (data) => api.post('/api/me', data, {
   headers: { 'Content-Type': 'multipart/form-data' },
 });

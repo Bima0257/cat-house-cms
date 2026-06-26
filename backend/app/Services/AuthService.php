@@ -2,14 +2,18 @@
 
 namespace App\Services;
 
+use App\Mail\SendResetLink;
 use App\Mail\VerifyEmailCode;
 use App\Models\User;
 use App\Services\AuditService;
 use App\Traits\ImageUpload;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthService
@@ -45,7 +49,7 @@ class AuthService
                 'verification_expires_at' => now()->addMinutes(2),
             ]);
 
-            Mail::to($user->email)->send(new VerifyEmailCode($otp));
+            Mail::to($user->email)->send(new VerifyEmailCode($otp, $user->name));
 
             return [
                 'needs_verification' => true,
@@ -86,7 +90,7 @@ class AuthService
 
         $user->assignRole('user');
 
-        Mail::to($user->email)->send(new VerifyEmailCode($otp));
+        Mail::to($user->email)->send(new VerifyEmailCode($otp, $user->name));
 
         return [
             'user' => $user,
@@ -125,7 +129,7 @@ class AuthService
             'verification_expires_at' => now()->addMinutes(2),
         ]);
 
-        Mail::to($user->email)->send(new VerifyEmailCode($otp));
+        Mail::to($user->email)->send(new VerifyEmailCode($otp, $user->name));
 
         return [
             'verification_expires_at' => $user->fresh()->verification_expires_at->toIso8601String(),
@@ -167,6 +171,72 @@ class AuthService
         ]);
 
         return $user;
+    }
+
+    public function sendResetLink(string $email)
+    {
+        $user = User::where('email', $email)->first();
+
+        if (! $user) {
+            return ['message' => 'Jika email terdaftar, tautan reset password akan dikirim.'];
+        }
+
+        $token = Str::random(64);
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $email],
+            ['token' => Hash::make($token), 'created_at' => now()]
+        );
+
+        $frontendUrl = Config::get('app.frontend_url');
+        $resetLink = rtrim($frontendUrl, '/') . '/reset-password?token=' . $token . '&email=' . urlencode($email);
+
+        Mail::to($email)->send(new SendResetLink($resetLink, $user->name));
+
+        return ['message' => 'Tautan reset password telah dikirim ke email Anda.'];
+    }
+
+    public function resetPassword(array $data)
+    {
+        $record = DB::table('password_reset_tokens')
+            ->where('email', $data['email'])
+            ->first();
+
+        if (! $record || ! Hash::check($data['token'], $record->token)) {
+            throw ValidationException::withMessages([
+                'token' => ['Tautan reset password tidak valid atau sudah digunakan.'],
+            ]);
+        }
+
+        $expiresAt = Carbon::parse($record->created_at)->addMinutes(60);
+        if (Carbon::now()->gt($expiresAt)) {
+            DB::table('password_reset_tokens')->where('email', $data['email'])->delete();
+            throw ValidationException::withMessages([
+                'email' => ['Tautan reset password sudah kadaluarsa. Silakan kirim ulang.'],
+            ]);
+        }
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'email' => ['User tidak ditemukan.'],
+            ]);
+        }
+
+        $user->update([
+            'password' => bcrypt($data['password']),
+        ]);
+
+        DB::table('password_reset_tokens')->where('email', $data['email'])->delete();
+
+        app(AuditService::class)->log(
+            action: 'auth.password-reset',
+            description: "Password reset: {$user->email}",
+            userId: $user->id,
+        );
+
+        return ['message' => 'Password berhasil direset. Silakan login dengan password baru Anda.'];
     }
 
     public function me()

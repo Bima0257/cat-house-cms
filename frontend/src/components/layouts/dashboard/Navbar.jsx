@@ -1,27 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { IconMenu2, IconLogout, IconSearch, IconBell } from '@tabler/icons-react';
-import { clearAuthState, getAuthState } from '../../../hooks/useAuth';
-import api from '../../../services/api';
+import { getAuthState } from '../../../hooks/useAuth';
+import { useLogout } from '../../../hooks/useLogout';
+import { ROLE_PROFILE } from '../../../constants/routes';
 
 const Navbar = ({ setSidebarOpen }) => {
   const navigate = useNavigate();
   const { user, roles } = getAuthState();
+  const handleLogout = useLogout();
 
-  const profilePath = roles.includes('staff')
-    ? '/staff/profile'
-    : roles.includes('admin') || roles.includes('super_admin')
-      ? '/admin/profile'
-      : '/customer/profile';
-
-  const handleLogout = async () => {
-    try {
-      await api.post('/api/logout');
-    } catch {
-      // ignore
-    }
-    clearAuthState();
-    navigate('/login');
-  };
+  const profilePath = ROLE_PROFILE[roles[0]] || '/customer/profile';
 
   const initials = (user?.name || 'U')
     .split(' ')

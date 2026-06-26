@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Requests\Auth\VerifyCodeRequest;
 use App\Services\AuthService;
@@ -72,6 +74,24 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Email berhasil diverifikasi ✅',
+        ]);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        $result = $this->authService->sendResetLink($request->email);
+
+        return response()->json([
+            'message' => $result['message'],
+        ]);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $result = $this->authService->resetPassword($request->validated());
+
+        return response()->json([
+            'message' => $result['message'],
         ]);
     }
 

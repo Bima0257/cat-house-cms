@@ -1,0 +1,830 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Customer Dashboard | Papfum Pet Care</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#9f420c',
+              'on-tertiary': '#ffffff',
+              error: '#ba1a1a',
+              'primary-container': '#f4824a',
+              'tertiary-fixed-dim': '#9ecee0',
+              'on-primary-fixed-variant': '#7c2e00',
+              'border-light': '#E8E8F0',
+              'primary-fixed-dim': '#ffb695',
+              'surface-container-high': '#e8e8e8',
+              'secondary-fixed-dim': '#c3c0ff',
+              'on-secondary': '#ffffff',
+              'on-background': '#1a1c1c',
+              'on-surface-variant': '#56423a',
+              'on-secondary-fixed-variant': '#413f80',
+              'on-primary-container': '#632400',
+              'tertiary-container': '#79a8b9',
+              'error-container': '#ffdad6',
+              'star-yellow': '#FFC107',
+              'on-error-container': '#93000a',
+              'tertiary-fixed': '#baeafc',
+              'on-primary-fixed': '#351000',
+              'surface-bright': '#f9f9f9',
+              'on-surface': '#1a1c1c',
+              'inverse-on-surface': '#f0f1f1',
+              'secondary-fixed': '#e2dfff',
+              'text-muted': '#6B6B8A',
+              'inverse-primary': '#ffb695',
+              'surface-container': '#eeeeee',
+              'inverse-surface': '#2f3131',
+              'on-tertiary-fixed': '#001f28',
+              'outline-variant': '#ddc1b5',
+              'on-primary': '#ffffff',
+              'text-dark': '#1A1A2E',
+              'on-tertiary-fixed-variant': '#194d5c',
+              'surface-tint': '#9f420c',
+              'ghost-paw': '#E0E0EE',
+              background: '#f9f9f9',
+              surface: '#f9f9f9',
+              secondary: '#595799',
+              outline: '#8a7268',
+              'surface-variant': '#e2e2e2',
+              'amber-accent': '#E8A830',
+              'surface-container-highest': '#e2e2e2',
+              'surface-dim': '#dadada',
+              'surface-container-lowest': '#ffffff',
+              'primary-fixed': '#ffdbcc',
+              'on-error': '#ffffff',
+              'on-tertiary-container': '#013d4c',
+              'on-secondary-container': '#454484',
+              'on-secondary-fixed': '#141052',
+              tertiary: '#356574',
+              'secondary-container': '#b6b4fe',
+              'surface-container-low': '#f3f3f4',
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              'stack-sm': '0.5rem',
+              'stack-lg': '2.5rem',
+              'stack-md': '1rem',
+              'section-gap': '6rem',
+              gutter: '1.5rem',
+              'container-max': '1200px',
+            },
+            fontFamily: {
+              'ui-label': ['Poppins'],
+              'hero-display': ['Fredoka One'],
+              'h3-card': ['Poppins'],
+              'body-small': ['Inter'],
+              'hero-display-mobile': ['Fredoka One'],
+              'body-main': ['Inter'],
+              'price-lg': ['Poppins'],
+              'h2-section': ['Fredoka One'],
+            },
+            fontSize: {
+              'ui-label': ['15px', { lineHeight: '1.2', fontWeight: '600' }],
+              'hero-display': [
+                '72px',
+                {
+                  lineHeight: '1.1',
+                  letterSpacing: '0.02em',
+                  fontWeight: '400',
+                },
+              ],
+              'h3-card': ['20px', { lineHeight: '1.4', fontWeight: '600' }],
+              'body-small': ['14px', { lineHeight: '1.5', fontWeight: '400' }],
+              'hero-display-mobile': [
+                '40px',
+                { lineHeight: '1.2', fontWeight: '400' },
+              ],
+              'body-main': ['16px', { lineHeight: '1.6', fontWeight: '400' }],
+              'price-lg': ['20px', { lineHeight: '1.2', fontWeight: '700' }],
+              'h2-section': ['28px', { lineHeight: '1.4', fontWeight: '400' }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      .paw-pattern {
+        background-color: transparent;
+        background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-9 6c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z' fill='%239f420c' fill-opacity='0.05'/%3E%3C/svg%3E");
+      }
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: minmax(180px, auto);
+        gap: 1.5rem;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #d1d1d1;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-on-surface font-body-main flex min-h-screen">
+    <!-- SideNavBar Component -->
+    <aside
+      class="h-screen w-64 left-0 sticky bg-surface-container-low dark:bg-surface-dim border-r border-border-light dark:border-outline-variant flex flex-col py-stack-md px-4 hidden md:flex shrink-0"
+    >
+      <div class="mb-10 px-4">
+        <span class="font-hero-display text-h3-card text-primary">Papfum</span>
+      </div>
+      <div class="flex items-center gap-3 px-4 mb-8">
+        <div
+          class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white font-bold overflow-hidden border-2 border-white shadow-sm"
+        >
+          <img
+            class="w-full h-full object-cover"
+            data-alt="A professional studio portrait of a friendly man in his 30s with a warm smile, styled as a premium profile picture for a luxury pet care app. The lighting is soft and even, highlighting a modern, approachable aesthetic against a clean, off-white background that matches a light-mode UI design."
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRu5jnzKZzH_FlRM2siKrKdunkBa4roXB_uAC40gnaj7uZ3ru-_Wp9DQ-8K5fxg0C134rgO8Gn2hGx7yHGMqUkeJjWX4UrJy3Ior3nXEpvd3vB1MUDKnCmkSWRrC7XA8pFuy4wD0b3e5CpW1af30rvW2a0yhht8F5tZdeW6D5xaby-E94Db8WAGEtqMBDt1tHE7Yl_Am8DPV-e6dHDkDVcoqZ-maJsSZrcxiWCgeSDjVrZYVwHWQJJM3FCg1RbYliii6wIJoutlQ"
+          />
+        </div>
+        <div>
+          <p
+            class="font-body-main text-body-main font-bold text-secondary dark:text-secondary-fixed-dim leading-tight"
+          >
+            Welcome back!
+          </p>
+          <p class="text-xs text-text-muted">Premium Pet Parent</p>
+        </div>
+      </div>
+      <nav class="flex-1 space-y-1">
+        <a
+          class="flex items-center gap-3 text-primary font-bold bg-primary-fixed dark:bg-primary-container rounded-lg px-4 py-2 transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="font-body-main text-body-main">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg transition-all group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined group-hover:text-primary transition-colors"
+            >package_2</span
+          >
+          <span class="font-body-main text-body-main">Orders</span>
+        </a>
+        <a
+          class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg transition-all group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined group-hover:text-primary transition-colors"
+            >pets</span
+          >
+          <span class="font-body-main text-body-main">My Cats</span>
+        </a>
+        <a
+          class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg transition-all group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined group-hover:text-primary transition-colors"
+            >event_repeat</span
+          >
+          <span class="font-body-main text-body-main">Subscriptions</span>
+        </a>
+        <a
+          class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg transition-all group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined group-hover:text-primary transition-colors"
+            >settings</span
+          >
+          <span class="font-body-main text-body-main">Settings</span>
+        </a>
+      </nav>
+      <div
+        class="mt-auto pt-6 space-y-1 border-t border-border-light dark:border-outline-variant"
+      >
+        <button
+          class="w-full mb-4 bg-primary text-white py-3 rounded-xl font-ui-label text-ui-label hover:scale-102 transition-transform shadow-md"
+        >
+          Refer a Friend
+        </button>
+        <a
+          class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg transition-all group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined group-hover:text-primary transition-colors"
+            >help</span
+          >
+          <span class="font-body-main text-body-main">Help Center</span>
+        </a>
+        <a
+          class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg transition-all group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined group-hover:text-primary transition-colors"
+            >logout</span
+          >
+          <span class="font-body-main text-body-main">Logout</span>
+        </a>
+      </div>
+    </aside>
+    <div class="flex-1 flex flex-col min-h-screen relative overflow-x-hidden">
+      <!-- TopNavBar Component -->
+      <header
+        class="w-full top-0 sticky z-30 bg-surface-container-lowest dark:bg-surface-container-low border-b border-border-light dark:border-outline-variant"
+      >
+        <div
+          class="flex justify-between items-center h-20 px-gutter max-w-container-max mx-auto"
+        >
+          <div class="flex items-center md:hidden">
+            <span class="font-hero-display text-h2-section text-primary"
+              >Papfum</span
+            >
+          </div>
+          <div class="hidden md:flex gap-8">
+            <a
+              class="font-ui-label text-ui-label text-on-surface-variant hover:text-primary transition-colors"
+              href="#"
+              >Shop</a
+            >
+            <a
+              class="font-ui-label text-ui-label text-on-surface-variant hover:text-primary transition-colors"
+              href="#"
+              >Subscription</a
+            >
+            <a
+              class="font-ui-label text-ui-label text-on-surface-variant hover:text-primary transition-colors"
+              href="#"
+              >Rewards</a
+            >
+            <a
+              class="font-ui-label text-ui-label text-on-surface-variant hover:text-primary transition-colors"
+              href="#"
+              >About</a
+            >
+          </div>
+          <div class="flex items-center gap-4 flex-1 justify-end">
+            <div class="relative max-w-xs w-full hidden sm:block">
+              <input
+                class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-border-light rounded-full text-body-small focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                placeholder="Search cat favorites..."
+                type="text"
+              />
+              <span
+                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+                >search</span
+              >
+            </div>
+            <div class="flex gap-2">
+              <button
+                class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors relative"
+              >
+                <span class="material-symbols-outlined">shopping_basket</span>
+                <span
+                  class="absolute top-0 right-0 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full"
+                  >3</span
+                >
+              </button>
+              <button
+                class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors"
+              >
+                <span class="material-symbols-outlined">account_circle</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- Main Content Area -->
+      <main
+        class="flex-1 p-gutter max-w-container-max mx-auto w-full space-y-stack-lg"
+      >
+        <!-- Welcome Section -->
+        <section
+          class="relative bg-primary overflow-hidden rounded-[2rem] p-8 md:p-12 text-white shadow-xl"
+        >
+          <div
+            class="absolute inset-0 paw-pattern opacity-20 pointer-events-none"
+          ></div>
+          <div
+            class="absolute -right-20 -top-20 w-64 h-64 bg-primary-container rounded-full blur-3xl opacity-30"
+          ></div>
+          <div class="relative z-10 md:flex justify-between items-center">
+            <div class="max-w-xl">
+              <h1
+                class="font-hero-display text-h2-section md:text-5xl mb-4 leading-tight"
+              >
+                Hi Alex! Your cats are waiting for their treats.
+              </h1>
+              <p class="font-body-main text-lg opacity-90 mb-8">
+                You have a delivery scheduled for this Friday. Ready for more
+                purrs?
+              </p>
+              <div class="flex flex-wrap gap-4">
+                <button
+                  class="bg-white text-primary font-bold px-8 py-3 rounded-full hover:scale-105 transition-transform flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined">shopping_cart</span>
+                  Shop Now
+                </button>
+                <button
+                  class="bg-primary-container text-white font-bold px-8 py-3 rounded-full hover:scale-105 transition-transform flex items-center gap-2 border border-white/20"
+                >
+                  <span class="material-symbols-outlined">calendar_today</span>
+                  Manage Delivery
+                </button>
+              </div>
+            </div>
+            <div class="hidden lg:block w-72 h-72 relative">
+              <div
+                class="absolute inset-0 bg-amber-accent/20 rounded-full animate-pulse"
+              ></div>
+              <img
+                class="w-full h-full object-contain relative z-20"
+                data-alt="A high-quality, professional cutout photo of a beautiful, fluffy calico cat looking curiously into the camera. The cat has vibrant orange, black, and white fur and bright green eyes. It is positioned as if sitting on the UI edge, with soft lighting and a clean, sharp focus suitable for a premium pet care brand dashboard."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXmKic83Ggc9K1NWAX_stqa1EV1Pmc0i4Zkr_UT6Ds0mEJMlWjVGDIDAsmpsop23PjSaX22vrbx1f2rTwAjBvcWcoJVnkkQprzAtTpfjIBXwVkJ63xxNL25SPO876-Tokpo8wirIU0wVb4TixhsBFja2vfhg_URHjCbQ_yOyzm5lKBnXeFUwrQBJ5KhfSr-ODrBnakypgmU8GmSeGZYtNq-qVIudB4XKnSjEbYJ_vKbUQ4DlKwhjyn5vhmJIaKzajqimuP8ASFbQ"
+              />
+            </div>
+          </div>
+        </section>
+        <!-- Quick Stats -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div
+            class="bg-surface-container-lowest border border-border-light p-6 rounded-3xl flex items-center gap-4 hover:shadow-md transition-shadow group"
+          >
+            <div
+              class="w-14 h-14 bg-secondary/10 rounded-2xl flex items-center justify-center text-secondary group-hover:scale-110 transition-transform"
+            >
+              <span class="material-symbols-outlined" style="font-size: 32px"
+                >receipt_long</span
+              >
+            </div>
+            <div>
+              <p class="text-text-muted font-ui-label text-sm">Total Orders</p>
+              <p class="font-price-lg text-3xl">12</p>
+            </div>
+          </div>
+          <div
+            class="bg-surface-container-lowest border border-border-light p-6 rounded-3xl flex items-center gap-4 hover:shadow-md transition-shadow group"
+          >
+            <div
+              class="w-14 h-14 bg-amber-accent/10 rounded-2xl flex items-center justify-center text-amber-accent group-hover:scale-110 transition-transform"
+            >
+              <span class="material-symbols-outlined" style="font-size: 32px"
+                >workspace_premium</span
+              >
+            </div>
+            <div>
+              <p class="text-text-muted font-ui-label text-sm">Reward Points</p>
+              <p class="font-price-lg text-3xl">450</p>
+            </div>
+          </div>
+          <div
+            class="bg-surface-container-lowest border border-border-light p-6 rounded-3xl flex items-center gap-4 hover:shadow-md transition-shadow group"
+          >
+            <div
+              class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform"
+            >
+              <span class="material-symbols-outlined" style="font-size: 32px"
+                >autorenew</span
+              >
+            </div>
+            <div>
+              <p class="text-text-muted font-ui-label text-sm">
+                Active Subscriptions
+              </p>
+              <p class="font-price-lg text-3xl">2</p>
+            </div>
+          </div>
+        </section>
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+          <!-- Left Column (Cats & Recent Orders) -->
+          <div class="xl:col-span-8 space-y-12">
+            <!-- Your Cats Section -->
+            <section>
+              <div class="flex justify-between items-end mb-6">
+                <h2 class="font-hero-display text-h2-section text-secondary">
+                  Your Cats
+                </h2>
+                <button
+                  class="text-primary font-bold hover:underline flex items-center gap-1"
+                >
+                  Add Cat
+                  <span class="material-symbols-outlined">add_circle</span>
+                </button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Midnight -->
+                <div
+                  class="bg-white border border-border-light rounded-[2rem] p-6 flex items-center gap-6 group hover:border-primary transition-all shadow-sm hover:shadow-xl relative overflow-hidden"
+                >
+                  <div
+                    class="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"
+                  ></div>
+                  <div
+                    class="w-24 h-24 rounded-2xl overflow-hidden shrink-0 border-2 border-border-light"
+                  >
+                    <img
+                      class="w-full h-full object-cover"
+                      data-alt="A close-up portrait of a sleek, black shorthair cat with bright yellow eyes, looking majestic and healthy. The image is captured in a minimalist style with soft studio lighting, highlighting the cat's glossy fur against a neutral grey background to ensure it looks premium and well-cared for."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgSbB1zciawquA6FG_WJgR_AsmqwLYSml3RjZQJNG6dY6DR5dOlVRNIbhHpP9eg87mp_0wngPwe0iRbVcO7-eDFyipvCMaZLLM9KCywmLjnuLNtoKX2CW9ejZigUE1Trk5VFBFDBMrTR6bNQqLLZUxx_wWteF7SYVm0b4m2Puvv4HE_LwgoeieGT4XxLmr-PRxcakiFSAQazkNkpmhx4l8vX5FcuBX8VpZtJrbBWxAg8ssr2xLvSpFwBla2THLAgNq1a1vJIZWXg"
+                    />
+                  </div>
+                  <div class="relative z-10 flex-1">
+                    <h3 class="font-h3-card text-secondary mb-1">Midnight</h3>
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                      <span class="text-xs font-semibold text-green-600"
+                        >Fed</span
+                      >
+                    </div>
+                    <button
+                      class="text-xs bg-surface-container px-3 py-1.5 rounded-full font-bold text-on-surface-variant hover:bg-primary hover:text-white transition-colors"
+                    >
+                      Daily Log
+                    </button>
+                  </div>
+                </div>
+                <!-- Ginger -->
+                <div
+                  class="bg-white border border-border-light rounded-[2rem] p-6 flex items-center gap-6 group hover:border-primary transition-all shadow-sm hover:shadow-xl relative overflow-hidden"
+                >
+                  <div
+                    class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"
+                  ></div>
+                  <div
+                    class="w-24 h-24 rounded-2xl overflow-hidden shrink-0 border-2 border-border-light"
+                  >
+                    <img
+                      class="w-full h-full object-cover"
+                      data-alt="A portrait of a friendly orange tabby cat with distinctive stripes and warm amber eyes. The cat has a playful expression, looking slightly to the side. Photographed in a high-key studio setting with soft shadows, fitting the clean and playful modern tactile minimalism aesthetic of the brand."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl1rzK0_Qdna-7Ukt2nhP1B_RN8ScG1unSXvgub7FyGR0c_q5Ku9t8WLxe-w7iFXaCV4S17_1u23Coy4UCE_vzi2K3y6xOAarXCAsS20MvL-Cv4bz06K3Edx1rQOY2crGz9gjRIodPDLifTM7hecU0ic4jY0blAIJZlsmyE4D-rKRljJ4ajFAzCfmkRr9GJEvegRnBqF93ARQj8E1jf3Ll3APIR19cMSpWwnBdB7zjosaoK3cxfKYL3ajc7YoBtL0NOkJLKcTfyg"
+                    />
+                  </div>
+                  <div class="relative z-10 flex-1">
+                    <h3 class="font-h3-card text-secondary mb-1">Ginger</h3>
+                    <div class="flex items-center gap-2 mb-3">
+                      <span
+                        class="w-2 h-2 rounded-full bg-amber-accent animate-pulse"
+                      ></span>
+                      <span class="text-xs font-semibold text-amber-accent"
+                        >Needs Food</span
+                      >
+                    </div>
+                    <button
+                      class="text-xs bg-primary text-white px-3 py-1.5 rounded-full font-bold hover:bg-primary-container transition-colors shadow-sm"
+                    >
+                      Fill Bowl Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- Recent Orders -->
+            <section>
+              <h2 class="font-hero-display text-h2-section text-secondary mb-6">
+                Recent Orders
+              </h2>
+              <div
+                class="bg-white border border-border-light rounded-[2rem] overflow-hidden shadow-sm"
+              >
+                <table class="w-full text-left border-collapse">
+                  <thead
+                    class="bg-surface-container-low border-b border-border-light"
+                  >
+                    <tr>
+                      <th
+                        class="px-6 py-4 font-ui-label text-on-surface-variant"
+                      >
+                        Order #
+                      </th>
+                      <th
+                        class="px-6 py-4 font-ui-label text-on-surface-variant"
+                      >
+                        Date
+                      </th>
+                      <th
+                        class="px-6 py-4 font-ui-label text-on-surface-variant"
+                      >
+                        Items
+                      </th>
+                      <th
+                        class="px-6 py-4 font-ui-label text-on-surface-variant"
+                      >
+                        Status
+                      </th>
+                      <th
+                        class="px-6 py-4 font-ui-label text-on-surface-variant"
+                      >
+                        Total
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-border-light">
+                    <tr
+                      class="hover:bg-surface-container-lowest transition-colors"
+                    >
+                      <td class="px-6 py-4 font-bold text-primary">#PF-8821</td>
+                      <td class="px-6 py-4 text-sm">Oct 12, 2023</td>
+                      <td class="px-6 py-4 text-sm">Gourmet Box x2...</td>
+                      <td class="px-6 py-4">
+                        <span
+                          class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold border border-blue-100"
+                          >Out for delivery</span
+                        >
+                      </td>
+                      <td class="px-6 py-4 font-bold">$42.00</td>
+                    </tr>
+                    <tr
+                      class="hover:bg-surface-container-lowest transition-colors"
+                    >
+                      <td class="px-6 py-4 font-bold text-primary">#PF-8714</td>
+                      <td class="px-6 py-4 text-sm">Sep 28, 2023</td>
+                      <td class="px-6 py-4 text-sm">Eco Litter (5kg)</td>
+                      <td class="px-6 py-4">
+                        <span
+                          class="px-3 py-1 rounded-full bg-green-50 text-green-600 text-xs font-bold border border-green-100"
+                          >Delivered</span
+                        >
+                      </td>
+                      <td class="px-6 py-4 font-bold">$24.50</td>
+                    </tr>
+                    <tr
+                      class="hover:bg-surface-container-lowest transition-colors"
+                    >
+                      <td class="px-6 py-4 font-bold text-primary">#PF-8592</td>
+                      <td class="px-6 py-4 text-sm">Sep 15, 2023</td>
+                      <td class="px-6 py-4 text-sm">Catnip Variety Pack</td>
+                      <td class="px-6 py-4">
+                        <span
+                          class="px-3 py-1 rounded-full bg-green-50 text-green-600 text-xs font-bold border border-green-100"
+                          >Delivered</span
+                        >
+                      </td>
+                      <td class="px-6 py-4 font-bold">$18.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="p-4 text-center border-t border-border-light">
+                  <button
+                    class="text-sm font-bold text-text-muted hover:text-primary transition-colors"
+                  >
+                    View All Order History
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>
+          <!-- Right Column (Recommended) -->
+          <div class="xl:col-span-4 space-y-8">
+            <section
+              class="bg-secondary p-8 rounded-[2rem] text-white relative overflow-hidden h-full"
+            >
+              <div
+                class="absolute bottom-0 right-0 opacity-10 translate-x-1/4 translate-y-1/4"
+              >
+                <span class="material-symbols-outlined" style="font-size: 200px"
+                  >thumb_up</span
+                >
+              </div>
+              <h2 class="font-hero-display text-h2-section mb-6 relative z-10">
+                Recommended for You
+              </h2>
+              <div class="space-y-6 relative z-10">
+                <!-- Product 1 -->
+                <div
+                  class="bg-white/10 backdrop-blur-sm border border-white/20 p-4 rounded-2xl flex gap-4 hover:bg-white/20 transition-all cursor-pointer group"
+                >
+                  <div
+                    class="w-20 h-20 bg-white rounded-xl flex-shrink-0 p-2 overflow-hidden border border-white/10"
+                  >
+                    <img
+                      class="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                      data-alt="Product shot of a bag of Purina Pro Plan cat food on a clean, light surface. The packaging is vibrant and professional, styled for a premium pet supply shop. The lighting is bright and clear, highlighting the high-quality ingredients and nutritional branding, consistent with a clean ecommerce UI."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBL7QxisHvKGUQD7fxQ5s2gNRF8CoSHVbG9ep629JQ4bCTSkxFFFzM0qvhQnh7GRpGc295i_9penhKMzhKAJUNhgv3FcFvyOWxoiQPs_IPTDJFTLkJ9QTrBimiMdM3Doq0I-fXIN9lFMGDpg6j19rK9TkRoKxZUM75aOVfcsji7lp_DGpe--YuWvv55YYcE1ZSMxVHcixJFEjseA2m8CVsm3h8js8oW80Pde4e5fGV3RakeMr8KmM1Ss2sdp_DwfzmQx7oQZZ6k_w"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <p
+                      class="text-xs font-bold uppercase tracking-widest text-amber-accent mb-1"
+                    >
+                      Top Rated
+                    </p>
+                    <h4 class="font-bold text-sm mb-2">
+                      Purina Pro Plan Adult
+                    </h4>
+                    <div class="flex items-center justify-between">
+                      <span class="font-bold text-white">$19.99</span>
+                      <button
+                        class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-primary-container transition-colors"
+                      >
+                        <span class="material-symbols-outlined text-sm"
+                          >add</span
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- Product 2 -->
+                <div
+                  class="bg-white/10 backdrop-blur-sm border border-white/20 p-4 rounded-2xl flex gap-4 hover:bg-white/20 transition-all cursor-pointer group"
+                >
+                  <div
+                    class="w-20 h-20 bg-white rounded-xl flex-shrink-0 p-2 overflow-hidden border border-white/10"
+                  >
+                    <img
+                      class="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                      data-alt="Close up of a Fancy Feast cat food can, positioned artistically on a minimalist white countertop with soft lighting. The branding is clearly visible, reflecting a premium cat dining experience. The scene conveys reliability and gourmet quality for discerning pet owners, fitting into a modern editorial design style."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAkVoowY7FXUd20fHMdK-ziOs1ecrqVd5sy1ijfF1viXacprDLWoxERV-QLKGXz0xZGL2j0KTjYHdb-Uyi4JplMcuWnzvdQmKqviRvqygW_S-fjLPSKydUD75nip8hechvpmfyWLGZzQhH1rpWd8_ZZm7qKKRRWrDCmaFKwFlGslgVdBUEw8FRYuq2cyY-b_po3TRFVGG31wFCflN4MybgASIoCWcuRgUr-LvaZPho6vBRQYWmCii8lLYvSl7jID3KNuD9ZFOKzw"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <p
+                      class="text-xs font-bold uppercase tracking-widest text-amber-accent mb-1"
+                    >
+                      Ginger's Choice
+                    </p>
+                    <h4 class="font-bold text-sm mb-2">
+                      Fancy Feast Poultry Selection
+                    </h4>
+                    <div class="flex items-center justify-between">
+                      <span class="font-bold text-white">$12.50</span>
+                      <button
+                        class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-primary-container transition-colors"
+                      >
+                        <span class="material-symbols-outlined text-sm"
+                          >add</span
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- Newsletter/Promo -->
+                <div class="pt-6 border-t border-white/10">
+                  <p class="text-sm italic opacity-80 mb-4">
+                    "Based on Midnight's breed and Ginger's age, we recommend
+                    these nutrient-rich options."
+                  </p>
+                  <div class="bg-primary-container p-4 rounded-2xl text-center">
+                    <p class="font-bold mb-1">Join the Gourmet Club</p>
+                    <p class="text-xs opacity-90 mb-3">
+                      Save 15% on your first order
+                    </p>
+                    <button
+                      class="w-full bg-white text-primary py-2 rounded-xl text-xs font-bold hover:shadow-lg transition-all"
+                    >
+                      Sign Up Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+      <!-- Footer Component -->
+      <footer
+        class="w-full mt-auto bg-surface-container-lowest dark:bg-surface-dim border-t border-border-light dark:border-outline-variant"
+      >
+        <div
+          class="flex flex-col md:flex-row justify-between items-center py-stack-lg px-gutter max-w-container-max mx-auto gap-6"
+        >
+          <div class="flex flex-col items-center md:items-start">
+            <span class="font-hero-display text-h3-card text-primary mb-2"
+              >Papfum</span
+            >
+            <p class="font-body-small text-body-small text-text-muted">
+              © 2024 Papfum Pet Care. All rights reserved.
+            </p>
+          </div>
+          <div class="flex flex-wrap justify-center gap-6">
+            <a
+              class="font-body-small text-body-small text-text-muted hover:text-primary transition-colors"
+              href="#"
+              >Privacy Policy</a
+            >
+            <a
+              class="font-body-small text-body-small text-text-muted hover:text-primary transition-colors"
+              href="#"
+              >Terms of Service</a
+            >
+            <a
+              class="font-body-small text-body-small text-text-muted hover:text-primary transition-colors"
+              href="#"
+              >Shipping Info</a
+            >
+            <a
+              class="font-body-small text-body-small text-text-muted hover:text-primary transition-colors"
+              href="#"
+              >Contact Us</a
+            >
+          </div>
+          <div class="flex gap-4">
+            <span
+              class="material-symbols-outlined text-text-muted hover:text-primary cursor-pointer"
+              >face_nod</span
+            >
+            <span
+              class="material-symbols-outlined text-text-muted hover:text-primary cursor-pointer"
+              >potted_plant</span
+            >
+            <span
+              class="material-symbols-outlined text-text-muted hover:text-primary cursor-pointer"
+              >pets</span
+            >
+          </div>
+        </div>
+      </footer>
+    </div>
+    <!-- Mobile Bottom Navigation Shell -->
+    <div
+      class="fixed bottom-0 left-0 right-0 bg-white border-t border-border-light flex justify-around py-3 md:hidden z-50"
+    >
+      <button class="flex flex-col items-center text-primary">
+        <span
+          class="material-symbols-outlined"
+          style="font-variation-settings: 'FILL' 1"
+          >dashboard</span
+        >
+        <span class="text-[10px] font-bold uppercase mt-1">Home</span>
+      </button>
+      <button class="flex flex-col items-center text-text-muted">
+        <span class="material-symbols-outlined">package_2</span>
+        <span class="text-[10px] font-bold uppercase mt-1">Orders</span>
+      </button>
+      <button class="flex flex-col items-center text-text-muted">
+        <span class="material-symbols-outlined">pets</span>
+        <span class="text-[10px] font-bold uppercase mt-1">Cats</span>
+      </button>
+      <button class="flex flex-col items-center text-text-muted">
+        <span class="material-symbols-outlined">account_circle</span>
+        <span class="text-[10px] font-bold uppercase mt-1">Profile</span>
+      </button>
+    </div>
+    <script>
+      // Simple Micro-interaction for Stats
+      document.querySelectorAll('.group').forEach((item) => {
+        item.addEventListener('mouseenter', () => {
+          const icon = item.querySelector('.material-symbols-outlined');
+          if (icon) {
+            icon.style.transform = 'translateY(-2px) rotate(5deg)';
+            icon.style.transition =
+              'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+          }
+        });
+        item.addEventListener('mouseleave', () => {
+          const icon = item.querySelector('.material-symbols-outlined');
+          if (icon) {
+            icon.style.transform = 'translateY(0) rotate(0)';
+          }
+        });
+      });
+
+      // Search Bar Focus Effect
+      const searchInput = document.querySelector('input[type="text"]');
+      if (searchInput) {
+        searchInput.addEventListener('focus', () => {
+          searchInput.parentElement.classList.add('scale-105');
+          searchInput.parentElement.style.transition =
+            'transform 0.2s ease-out';
+        });
+        searchInput.addEventListener('blur', () => {
+          searchInput.parentElement.classList.remove('scale-105');
+        });
+      }
+    </script>
+  </body>
+</html>

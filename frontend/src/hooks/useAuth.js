@@ -1,13 +1,18 @@
 import { useEffect, useState, useCallback } from 'react';
 import api from '../services/api';
+import { STORAGE_KEYS } from '../constants/storage';
+
+const getItem = (key) => localStorage.getItem(key);
+const setItem = (key, value) => localStorage.setItem(key, value);
+const removeItem = (key) => localStorage.removeItem(key);
 
 export const getAuthState = () => {
   try {
-    const isAuth = localStorage.getItem('isAuth') === 'true';
-    const roles = JSON.parse(localStorage.getItem('roles') || '[]');
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
-    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
+    const isAuth = getItem(STORAGE_KEYS.IS_AUTH) === 'true';
+    const roles = JSON.parse(getItem(STORAGE_KEYS.ROLES) || '[]');
+    const token = getItem(STORAGE_KEYS.TOKEN);
+    const user = JSON.parse(getItem(STORAGE_KEYS.USER) || 'null');
+    const permissions = JSON.parse(getItem(STORAGE_KEYS.PERMISSIONS) || '[]');
     return { isAuth: isAuth && !!token, roles, user, permissions };
   } catch {
     return { isAuth: false, roles: [], user: null, permissions: [] };
@@ -15,20 +20,20 @@ export const getAuthState = () => {
 };
 
 export const setAuthState = (data) => {
-  localStorage.setItem('isAuth', 'true');
-  localStorage.setItem('token', data.token);
-  localStorage.setItem('roles', JSON.stringify(data.roles));
-  localStorage.setItem('user', JSON.stringify(data.user));
-  localStorage.setItem('permissions', JSON.stringify(data.permissions || []));
+  setItem(STORAGE_KEYS.IS_AUTH, 'true');
+  setItem(STORAGE_KEYS.TOKEN, data.token);
+  setItem(STORAGE_KEYS.ROLES, JSON.stringify(data.roles));
+  setItem(STORAGE_KEYS.USER, JSON.stringify(data.user));
+  setItem(STORAGE_KEYS.PERMISSIONS, JSON.stringify(data.permissions || []));
   window.dispatchEvent(new Event('authChanged'));
 };
 
 export const clearAuthState = () => {
-  localStorage.removeItem('isAuth');
-  localStorage.removeItem('token');
-  localStorage.removeItem('roles');
-  localStorage.removeItem('user');
-  localStorage.removeItem('permissions');
+  removeItem(STORAGE_KEYS.IS_AUTH);
+  removeItem(STORAGE_KEYS.TOKEN);
+  removeItem(STORAGE_KEYS.ROLES);
+  removeItem(STORAGE_KEYS.USER);
+  removeItem(STORAGE_KEYS.PERMISSIONS);
   window.dispatchEvent(new Event('authChanged'));
 };
 
@@ -45,9 +50,9 @@ export function useAuth() {
     try {
       const res = await api.get('/api/me');
       const { user, roles, permissions } = res.data.data;
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('roles', JSON.stringify(roles));
-      localStorage.setItem('permissions', JSON.stringify(permissions || []));
+      setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+      setItem(STORAGE_KEYS.ROLES, JSON.stringify(roles));
+      setItem(STORAGE_KEYS.PERMISSIONS, JSON.stringify(permissions || []));
       setAuth(getAuthState());
     } catch {
       clearAuthState();

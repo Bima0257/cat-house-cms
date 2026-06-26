@@ -16,6 +16,8 @@ import Contact from '../features/landing/Contact';
 import Login from '../features/auth/Login';
 import Register from '../features/auth/Register';
 import VerifyCode from '../features/auth/VerifyCode';
+import ForgotPassword from '../features/auth/ForgotPassword';
+import ResetPassword from '../features/auth/ResetPassword';
 
 import CustomerDashboard from '../features/dashboard/CustomerDashboard';
 import MyCats from '../features/cats/MyCats';
@@ -54,6 +56,8 @@ const router = createBrowserRouter([
       { path: '/login', element: <Login /> },
       { path: '/register', element: <Register /> },
       { path: '/verify-code', element: <VerifyCode /> },
+      { path: '/forgot-password', element: <ForgotPassword /> },
+      { path: '/reset-password', element: <ResetPassword /> },
     ],
   },
   // Public landing routes

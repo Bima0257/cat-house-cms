@@ -22,6 +22,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verify-code', [AuthController::class, 'verifyCode']);
 Route::post('/resend-code', [AuthController::class, 'resendCode']);
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 Route::get('/services/public', [ServiceController::class, 'index']);
 

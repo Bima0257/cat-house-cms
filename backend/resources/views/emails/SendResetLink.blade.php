@@ -24,7 +24,7 @@
                   <td style="font-size:24px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;">Cat House</td>
                 </tr>
               </table>
-              <p style="margin:6px 0 0;font-size:14px;color:#9f420c;font-weight:500;">Verifikasi Alamat Email</p>
+              <p style="margin:6px 0 0;font-size:14px;color:#9f420c;font-weight:500;">Atur Ulang Kata Sandi</p>
             </td>
           </tr>
 
@@ -35,27 +35,40 @@
                 Halo, {{ $name }}
               </p>
               <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
-                Terima kasih telah mendaftar di Cat House. Masukkan kode OTP di bawah ini untuk memverifikasi alamat email kamu.
+                Kami menerima permintaan untuk mengatur ulang kata sandi akun Cat House kamu.
+                Klik tombol di bawah ini untuk melanjutkan.
               </p>
 
-              <div style="background:#faf6f2;border-radius:12px;padding:24px;margin:0 0 24px;border:1px solid #f0e8e0;">
-                <p style="margin:0 0 10px;font-size:11px;color:#9f420c;text-transform:uppercase;letter-spacing:2px;font-weight:600;">Kode Verifikasi</p>
-                <p style="margin:0;font-size:40px;font-weight:700;color:#9f420c;letter-spacing:10px;font-family:monospace;">{{ $code }}</p>
-              </div>
+              <!-- CTA Button -->
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 20px;">
+                <tr>
+                  <td align="center" style="background:#9f420c;border-radius:12px;padding:14px 40px;">
+                    <a href="{{ $resetLink }}" style="color:#ffffff;font-size:16px;font-weight:600;text-decoration:none;display:inline-block;letter-spacing:0.3px;">
+                      Atur Ulang Kata Sandi
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Fallback text link -->
+              <p style="margin:0 0 24px;font-size:12px;color:#aaa;line-height:1.5;word-break:break-all;">
+                Jika tombol di atas tidak berfungsi, salin dan buka tautan berikut di browser:<br>
+                <a href="{{ $resetLink }}" style="color:#9f420c;text-decoration:underline;">{{ $resetLink }}</a>
+              </p>
 
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="padding:12px 16px;background:#fff8f4;border-radius:8px;border:1px solid #f5e8de;">
                     <p style="margin:0;font-size:12px;color:#8a6e5a;line-height:1.5;">
                       <strong style="color:#9f420c;">&#9432; Peringatan Keamanan</strong><br>
-                      Jangan bagikan kode OTP ini kepada siapa pun, termasuk pihak yang mengaku dari Cat House. Kode ini hanya berlaku selama <strong>2 menit</strong>.
+                      Jangan bagikan tautan ini kepada siapa pun. Tautan ini hanya berlaku selama <strong>60 menit</strong> dan hanya bisa digunakan satu kali.
                     </p>
                   </td>
                 </tr>
               </table>
 
               <p style="margin:20px 0 0;font-size:13px;color:#999;line-height:1.5;">
-                Jika kamu tidak melakukan pendaftaran di Cat House, abaikan email ini.
+                Jika kamu tidak meminta pengaturan ulang kata sandi, abaikan email ini. Akun kamu tetap aman.
               </p>
             </td>
           </tr>

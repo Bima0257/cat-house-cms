@@ -1,0 +1,5 @@
+export const LOGIN_COOLDOWN_DURATION = 120000;
+
+export const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
+
+export const SESSION_GRACE_PERIOD_MS = 2 * 60 * 1000;

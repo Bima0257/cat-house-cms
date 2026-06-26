@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { loginApi } from '../../services/auth';
 import { setAuthState } from '../../hooks/useAuth';
+import { ROLE_DASHBOARD } from '../../constants/routes';
+import { LOGIN_COOLDOWN_DURATION } from '../../constants/config';
 import {
   IconDeviceMobile,
   IconCalendar,
@@ -23,7 +25,7 @@ const iconMap = {
   support_agent: IconHeadset,
 };
 
-const COOLDOWN_DURATION = 120000; // 2 minutes
+const COOLDOWN_DURATION = LOGIN_COOLDOWN_DURATION;
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
@@ -90,13 +92,7 @@ const Login = () => {
       setAuthState({ token, roles, user });
       localStorage.setItem('user', JSON.stringify(user));
 
-      if (roles.includes('super_admin') || roles.includes('admin')) {
-        navigate('/admin');
-      } else if (roles.includes('staff')) {
-        navigate('/staff');
-      } else {
-        navigate('/customer');
-      }
+      navigate(ROLE_DASHBOARD[roles[0]] || ROLE_DASHBOARD.user);
     } catch (err) {
       captchaRef.current?.reset();
       setCaptchaToken(null);
@@ -224,6 +220,14 @@ const Login = () => {
                   {showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
                 </button>
               </div>
+            </div>
+            <div className="flex justify-end -mt-3">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-primary hover:text-on-primary-container transition-colors"
+              >
+                Lupa Password?
+              </Link>
             </div>
             <div className="flex justify-center min-h-[78px]">
               {captchaError && (
