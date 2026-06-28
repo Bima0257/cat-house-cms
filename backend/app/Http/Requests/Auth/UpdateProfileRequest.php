@@ -17,7 +17,9 @@ class UpdateProfileRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . auth()->id(),
             'phone' => 'nullable|string|max:20',
-            'password' => 'nullable|string|min:6',
+            'current_password' => 'required_with:password|string|current_password',
+            'password' => 'nullable|string|min:6|confirmed',
+            'password_confirmation' => 'required_with:password|string|min:6',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }

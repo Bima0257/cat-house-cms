@@ -1,40 +1,49 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAuthState } from '../../hooks/useAuth';
-import { updateProfileApi } from '../../services/auth';
+import { useState, useEffect } from 'react';
+import { getAuthState, setAuthState } from '../../hooks/useAuth';
+import { getUser, updateProfileApi } from '../../services/auth';
 import alert from '../../lib/alert';
-import { IconUser, IconCamera } from '@tabler/icons-react';
+import { IconUser, IconCamera, IconEye, IconEyeOff } from '@tabler/icons-react';
 
 const Profile = () => {
-  const authState = getAuthState();
-  const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', current_password: '', password: '', password_confirmation: '' });
   const [avatar, setAvatar] = useState(null);
   const [preview, setPreview] = useState(null);
   const [saving, setSaving] = useState(false);
-
-  // Use ref to track user ID instead of full object reference
-  const userIdRef = useRef(authState.user?.id);
-
-  // Memoize user data to prevent unnecessary re-renders
-  const user = useMemo(() => authState.user, [authState.user?.id, authState.user?.updated_at]);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      // Only update form if user ID changed (new user data from server)
-      if (userIdRef.current !== user.id) {
-        userIdRef.current = user.id;
+    const fetchUser = async () => {
+      try {
+        const res = await getUser();
+        const u = res.data.data.user;
         setForm({
-          name: user.name || '',
-          email: user.email || '',
-          phone: user.phone || '',
+          name: u.name || '',
+          email: u.email || '',
+          phone: u.phone || '',
+          current_password: '',
           password: '',
+          password_confirmation: '',
         });
-        setPreview(user.avatar ? `/storage/${user.avatar}` : null);
-        setAvatar(null);
+        setPreview(u.avatar ? `/storage/${u.avatar}` : null);
+      } catch {
+        const authState = getAuthState();
+        if (authState.user) {
+          setForm({
+            name: authState.user.name || '',
+            email: authState.user.email || '',
+            phone: authState.user.phone || '',
+            current_password: '',
+            password: '',
+            password_confirmation: '',
+          });
+          setPreview(authState.user.avatar ? `/storage/${authState.user.avatar}` : null);
+        }
       }
-    }
-  }, [user]);
+    };
+    fetchUser();
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -52,16 +61,22 @@ const Profile = () => {
       fd.append('name', form.name);
       fd.append('email', form.email);
       if (form.phone) fd.append('phone', form.phone);
+      if (form.current_password) fd.append('current_password', form.current_password);
       if (form.password) fd.append('password', form.password);
+      if (form.password_confirmation) fd.append('password_confirmation', form.password_confirmation);
       if (avatar) fd.append('avatar', avatar);
-      fd.append('_method', 'PUT');
-      await updateProfileApi(fd);
-      alert.success('Profil berhasil diupdate');
-      // Reset form state without full page reload
-      setForm((prev) => ({ ...prev, password: '' }));
+      const res = await updateProfileApi(fd);
+      const u = res.data.data.user;
+      setAuthState({
+        token: getAuthState().token,
+        roles: getAuthState().roles,
+        user: u,
+        permissions: getAuthState().permissions,
+      });
+      setForm((prev) => ({ ...prev, current_password: '', password: '', password_confirmation: '' }));
+      setPreview(u.avatar ? `/storage/${u.avatar}` : null);
       setAvatar(null);
-      // Navigate to refresh current route data
-      navigate(0);
+      alert.success('Profil berhasil diupdate');
     } catch (err) {
       alert.error(err.response?.data?.message || 'Gagal mengupdate profil');
     } finally {
@@ -95,8 +110,8 @@ const Profile = () => {
               <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
             </label>
             <div>
-              <p className="font-semibold text-text-dark">{user?.name || 'User'}</p>
-              <p className="text-sm text-text-muted">{user?.email}</p>
+              <p className="font-semibold text-text-dark">{form.name || 'User'}</p>
+              <p className="text-sm text-text-muted">{form.email}</p>
               <p className="text-xs text-text-muted mt-0.5">Klik foto untuk mengganti</p>
             </div>
           </div>
@@ -138,17 +153,68 @@ const Profile = () => {
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-text-dark mb-1.5">Password Saat Ini</label>
+              <div className="relative">
+                <input
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={form.current_password}
+                  onChange={(e) => setForm({ ...form, current_password: e.target.value })}
+                  className="w-full px-4 py-2.5 pr-10 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:shadow-[0_0_0_3px_rgba(159,66,12,0.12)] transition"
+                  placeholder="Password saat ini"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword((p) => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-dark transition-colors"
+                  tabIndex={-1}
+                >
+                  {showCurrentPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+                </button>
+              </div>
+            </div>
+            <div>
               <label className="block text-sm font-medium text-text-dark mb-1.5">
                 Password Baru <span className="text-text-muted font-normal">(kosongkan jika tidak diubah)</span>
               </label>
-              <input
-                type="password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full px-4 py-2.5 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:shadow-[0_0_0_3px_rgba(159,66,12,0.12)] transition"
-                placeholder="Min. 6 karakter"
-                minLength={6}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="w-full px-4 py-2.5 pr-10 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:shadow-[0_0_0_3px_rgba(159,66,12,0.12)] transition"
+                  placeholder="Min. 6 karakter"
+                  minLength={6}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((p) => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-dark transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-text-dark mb-1.5">Konfirmasi Password Baru</label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={form.password_confirmation}
+                  onChange={(e) => setForm({ ...form, password_confirmation: e.target.value })}
+                  className="w-full px-4 py-2.5 pr-10 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:shadow-[0_0_0_3px_rgba(159,66,12,0.12)] transition"
+                  placeholder="Ulangi password baru"
+                  minLength={6}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((p) => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-dark transition-colors"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+                </button>
+              </div>
             </div>
           </div>
 

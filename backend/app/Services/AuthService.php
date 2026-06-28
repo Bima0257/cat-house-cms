@@ -254,6 +254,8 @@ class AuthService
     {
         $user = request()->user();
 
+        unset($data['current_password'], $data['password_confirmation']);
+
         if (isset($data['password'])) {
             $data['password'] = bcrypt($data['password']);
         } else {
