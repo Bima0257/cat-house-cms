@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatches } from 'react-router-dom';
 import { IconMenu2, IconLogout, IconSearch, IconBell } from '@tabler/icons-react';
 import { getAuthState } from '../../../hooks/useAuth';
 import { useLogout } from '../../../hooks/useLogout';
@@ -6,8 +6,11 @@ import { ROLE_PROFILE } from '../../../constants/routes';
 
 const Navbar = ({ setSidebarOpen }) => {
   const navigate = useNavigate();
+  const matches = useMatches();
   const { user, roles } = getAuthState();
   const handleLogout = useLogout();
+
+  const pageTitle = matches[matches.length - 1]?.handle?.title || 'Dashboard';
 
   const profilePath = ROLE_PROFILE[roles[0]] || '/customer/profile';
 
@@ -31,7 +34,7 @@ const Navbar = ({ setSidebarOpen }) => {
         </button>
 
         <h2 className="font-h3-card text-lg text-text-dark">
-          Dashboard Overview
+          {pageTitle}
         </h2>
       </div>
 

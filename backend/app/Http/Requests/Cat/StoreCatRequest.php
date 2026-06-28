@@ -17,7 +17,7 @@ class StoreCatRequest extends FormRequest
             'name' => 'required|string|max:100',
             'breed' => 'nullable|string|max:100',
             'gender' => 'nullable|in:jantan,betina',
-            'birth_date' => 'nullable|date',
+            'age' => 'nullable|integer|min:0|max:240',
             'weight' => 'nullable|numeric|min:0|max:99.99',
             'color' => 'nullable|string|max:50',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',

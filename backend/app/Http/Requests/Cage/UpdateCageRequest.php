@@ -19,6 +19,7 @@ class UpdateCageRequest extends FormRequest
             'code' => 'sometimes|string|max:20|unique:cages,code,'.$cageId,
             'category' => 'sometimes|in:standard,premium,vip',
             'capacity' => 'sometimes|integer|min:1',
+            'price' => 'nullable|numeric|min:0',
             'status' => 'nullable|in:tersedia,terisi,perbaikan',
         ];
     }

@@ -8,7 +8,7 @@ const LandingLayout = () => {
     <div className='font-[Nunito] bg-[#fdf5ee] text-[#7a3b1e] overflow-x-hidden pb-16 md:pb-0'>
       <Navbar />
 
-      <main>
+      <main className="pt-20">
         <Outlet />
       </main>
       <Footer />

@@ -12,11 +12,12 @@ class Cage extends Model
     use HasFactory, Auditable;
 
     protected $fillable = [
-        'code', 'category', 'capacity', 'status',
+        'code', 'category', 'capacity', 'price', 'status',
     ];
 
     protected $casts = [
         'capacity' => 'integer',
+        'price' => 'decimal:2',
         'category' => 'string',
         'status' => 'string',
     ];

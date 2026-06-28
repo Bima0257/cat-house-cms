@@ -5,7 +5,7 @@ import {
 } from '@tabler/icons-react';
 
 const Hero = () => (
-  <section className="max-w-container-max mx-auto px-gutter py-16">
+  <section className="max-w-container-max mx-auto px-gutter pb-16">
     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
       <div className="md:col-span-4 relative h-full flex flex-col justify-center animate-fade-up">
         <div className="mb-4">

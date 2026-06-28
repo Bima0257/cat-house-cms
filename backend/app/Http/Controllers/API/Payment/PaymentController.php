@@ -18,7 +18,13 @@ class PaymentController extends Controller
 
     public function index()
     {
-        $payments = $this->paymentService->getAll(request()->all());
+        $filters = request()->all();
+
+        if (!auth()->user()->can('payments.index')) {
+            $filters['user_id'] = auth()->id();
+        }
+
+        $payments = $this->paymentService->getAll($filters);
 
         return $this->paginated($payments);
     }

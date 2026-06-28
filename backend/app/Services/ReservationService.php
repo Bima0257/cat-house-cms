@@ -24,6 +24,15 @@ class ReservationService
             ->when(isset($filters['status']), fn ($q) => $q->where('status', $filters['status']))
             ->when(isset($filters['date_from']), fn ($q) => $q->whereDate('check_in', '>=', $filters['date_from']))
             ->when(isset($filters['date_to']), fn ($q) => $q->whereDate('check_out', '<=', $filters['date_to']))
+            ->when(isset($filters['search']), function ($q) use ($filters) {
+                $s = $filters['search'];
+                $q->where(function ($q) use ($s) {
+                    $q->where('note', 'like', "%{$s}%")
+                      ->orWhereHas('cat', fn ($q) => $q->where('name', 'like', "%{$s}%"))
+                      ->orWhereHas('service', fn ($q) => $q->where('name', 'like', "%{$s}%"))
+                      ->orWhereHas('cage', fn ($q) => $q->where('code', 'like', "%{$s}%"));
+                });
+            })
             ->with(['user', 'cat', 'service', 'cage', 'payment'])
             ->latest()
             ->paginate($filters['per_page'] ?? 10);

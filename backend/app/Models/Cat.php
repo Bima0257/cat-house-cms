@@ -19,12 +19,12 @@ class Cat extends Model
     }
 
     protected $fillable = [
-        'uuid', 'user_id', 'name', 'breed', 'gender', 'birth_date',
+        'uuid', 'user_id', 'name', 'breed', 'gender', 'age',
         'weight', 'color', 'photo', 'vaccination_status', 'medical_note',
     ];
 
     protected $casts = [
-        'birth_date' => 'date',
+        'age' => 'integer',
         'weight' => 'decimal:2',
         'vaccination_status' => 'string',
     ];

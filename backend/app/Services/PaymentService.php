@@ -14,6 +14,9 @@ class PaymentService
         return Payment::query()
             ->when(isset($filters['status']), fn ($q) => $q->where('status', $filters['status']))
             ->when(isset($filters['payment_method']), fn ($q) => $q->where('payment_method', $filters['payment_method']))
+            ->when(isset($filters['user_id']), fn ($q) => $q->whereHas('reservation',
+                fn ($q) => $q->where('user_id', $filters['user_id'])
+            ))
             ->with('reservation.user')
             ->latest()
             ->paginate($filters['per_page'] ?? 10);

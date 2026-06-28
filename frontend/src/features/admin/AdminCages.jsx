@@ -21,6 +21,7 @@ const AdminCages = () => {
     code: '',
     category: 'standard',
     capacity: 1,
+    price: '',
     status: 'tersedia'
   });
 
@@ -70,7 +71,7 @@ const AdminCages = () => {
   const resetForm = () => {
     setShowForm(false);
     setEditingId(null);
-    setForm({ code: '', category: 'standard', capacity: 1, status: 'tersedia' });
+    setForm({ code: '', category: 'standard', capacity: 1, price: '', status: 'tersedia' });
   };
 
   const handleSubmit = (e) => {
@@ -88,6 +89,7 @@ const AdminCages = () => {
       code: cage.code,
       category: cage.category,
       capacity: cage.capacity,
+      price: cage.price ?? '',
       status: cage.status,
     });
     setShowForm(true);
@@ -146,6 +148,17 @@ const AdminCages = () => {
         <div className="flex items-center gap-1">
           <span className="font-semibold text-text-dark">{cage.capacity}</span>
           <span className="text-text-muted text-sm">kucing</span>
+        </div>
+      ),
+    },
+    {
+      key: 'price',
+      accessor: 'price',
+      header: 'Harga',
+      enableSorting: true,
+      render: (cage) => (
+        <div className="flex items-center gap-1 font-semibold text-primary">
+          {cage.price ? `Rp ${Number(cage.price).toLocaleString('id-ID')}` : '-'}
         </div>
       ),
     },
@@ -271,6 +284,21 @@ const AdminCages = () => {
                 onChange={(e) => setForm({ ...form, capacity: parseInt(e.target.value) || 1 })}
                 className="w-full px-4 py-2.5 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-text-dark mb-1.5">Harga per Hari</label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted">Rp</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={form.price}
+                  onChange={(e) => setForm({ ...form, price: e.target.value })}
+                  className="w-full pl-10 pr-4 py-2.5 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                  placeholder="0"
+                />
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-text-dark mb-1.5">Status</label>

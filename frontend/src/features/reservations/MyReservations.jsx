@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getReservations,
@@ -23,11 +23,18 @@ const MyReservations = () => {
     check_out: '',
     note: '',
   });
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const { data: reservationsData } = useQuery({
-    queryKey: ['my-reservations'],
+    queryKey: ['my-reservations', { search: debouncedSearch }],
     queryFn: async () => {
-      const res = await getReservations({ per_page: 100 });
+      const res = await getReservations({ search: debouncedSearch, per_page: 100 });
       return res.data;
     },
   });
@@ -142,14 +149,21 @@ const MyReservations = () => {
 
   return (
     <div>
-      <div className='flex items-center justify-between mb-6'>
-        <h1 className='text-2xl font-bold text-gray-800'>Reservasi Saya</h1>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className='bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors text-sm font-semibold'
-        >
-          {showForm ? 'Batal' : '+ Reservasi Baru'}
-        </button>
+      <div className='mb-6'>
+        <div className='flex items-center justify-between mb-4'>
+          <h1 className='text-2xl font-bold text-gray-800'>Reservasi Saya</h1>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className='bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors text-sm font-semibold'
+          >
+            {showForm ? 'Batal' : '+ Reservasi Baru'}
+          </button>
+        </div>
+        <div className="relative">
+          <input type="search" placeholder="Cari reservasi..." value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full md:w-80 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm" />
+        </div>
       </div>
 
       {showForm && (
@@ -225,7 +239,7 @@ const MyReservations = () => {
                 <option value=''>Pilih Kandang</option>
                 {(cagesData?.data || []).map((cage) => (
                   <option key={cage.id} value={cage.id}>
-                    {cage.code} - {cage.category}
+                    {cage.code} - {cage.category}{cage.price != null ? ` - Rp ${Number(cage.price).toLocaleString('id-ID')}/hari` : ''}
                   </option>
                 ))}
               </select>
@@ -367,8 +381,8 @@ const MyReservations = () => {
         ))}
         {reservations.length === 0 && (
           <div className='text-center py-12 text-gray-400'>
-            <div className='text-4xl mb-4'>📅</div>
-            <p>Belum ada reservasi</p>
+            <div className='text-4xl mb-4'>{debouncedSearch ? '🔍' : '📅'}</div>
+            <p>{debouncedSearch ? `Tidak ada hasil untuk "${debouncedSearch}"` : 'Belum ada reservasi'}</p>
           </div>
         )}
       </div>
