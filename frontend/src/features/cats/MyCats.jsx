@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCats, createCat, updateCat, deleteCat } from '../../services/cats';
 import alert from '../../lib/alert';
-import { IconCamera, IconPhoto } from '@tabler/icons-react';
+import { IconCamera, IconPhoto, IconPaw, IconSearch } from '@tabler/icons-react';
 
 const MyCats = () => {
   const queryClient = useQueryClient();
@@ -222,12 +222,28 @@ const MyCats = () => {
       )}
 
       {isLoading ? (
-        <div className="text-center py-12 text-gray-400">Memuat...</div>
+        <div className="flex items-center justify-center py-16">
+          <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+        </div>
       ) : cats.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
-          <div className="text-4xl mb-4">{debouncedSearch ? '🔍' : '😿'}</div>
-          <p className="mb-2">{debouncedSearch ? `Tidak ada hasil untuk "${debouncedSearch}"` : 'Belum ada kucing terdaftar'}</p>
-          {!debouncedSearch && <p className="text-sm">Tambahkan kucing Anda untuk mulai reservasi</p>}
+        <div className="bg-surface-container-lowest border border-border-light rounded-[2rem] py-14 px-6 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-primary-fixed/30 flex items-center justify-center mx-auto mb-5">
+            {debouncedSearch ? <IconSearch size={32} className="text-primary" /> : <IconPaw size={32} className="text-primary" />}
+          </div>
+          <h4 className="text-base font-semibold text-text-dark mb-1">
+            {debouncedSearch ? 'Tidak ditemukan' : 'Belum ada kucing'}
+          </h4>
+          <p className="text-sm text-text-muted mb-6 max-w-xs mx-auto">
+            {debouncedSearch ? `Tidak ada hasil untuk "${debouncedSearch}"` : 'Tambahkan kucing pertama Anda untuk mulai menggunakan layanan kami'}
+          </p>
+          {!debouncedSearch && (
+            <button onClick={() => setShowForm(true)}
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-white px-6 py-2.5 rounded-full font-bold hover:scale-105 transition-transform shadow-sm text-sm"
+            >
+              <IconPaw size={18} />
+              Tambah Kucing
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

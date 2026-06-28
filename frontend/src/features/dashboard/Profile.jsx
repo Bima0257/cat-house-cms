@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getAuthState, setAuthState } from '../../hooks/useAuth';
 import { getUser, updateProfileApi } from '../../services/auth';
+import PasswordStrength from '../../components/ui/PasswordStrength';
 import alert from '../../lib/alert';
 import { IconUser, IconCamera, IconEye, IconEyeOff } from '@tabler/icons-react';
 
@@ -182,8 +183,7 @@ const Profile = () => {
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   className="w-full px-4 py-2.5 pr-10 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:shadow-[0_0_0_3px_rgba(159,66,12,0.12)] transition"
-                  placeholder="Min. 6 karakter"
-                  minLength={6}
+                  placeholder="Min. 8 karakter"
                 />
                 <button
                   type="button"
@@ -194,6 +194,7 @@ const Profile = () => {
                   {showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
                 </button>
               </div>
+              <PasswordStrength password={form.password} />
             </div>
             <div>
               <label className="block text-sm font-medium text-text-dark mb-1.5">Konfirmasi Password Baru</label>
@@ -203,8 +204,7 @@ const Profile = () => {
                   value={form.password_confirmation}
                   onChange={(e) => setForm({ ...form, password_confirmation: e.target.value })}
                   className="w-full px-4 py-2.5 pr-10 border border-border-light rounded-xl bg-white text-text-dark focus:outline-none focus:border-primary focus:shadow-[0_0_0_3px_rgba(159,66,12,0.12)] transition"
-                  placeholder="Ulangi password baru"
-                  minLength={6}
+                  placeholder="Ulangi password"
                 />
                 <button
                   type="button"

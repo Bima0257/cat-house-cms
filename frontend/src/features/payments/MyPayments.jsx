@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getPayments } from '../../services/payments';
+import { IconReceipt } from '@tabler/icons-react';
 
 const statusColors = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -23,11 +24,16 @@ const MyPayments = () => {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Riwayat Pembayaran</h1>
 
       {isLoading ? (
-        <div className="text-center py-12 text-gray-400">Memuat...</div>
+        <div className="flex items-center justify-center py-16">
+          <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+        </div>
       ) : payments.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
-          <div className="text-4xl mb-4">💰</div>
-          <p>Belum ada pembayaran</p>
+        <div className="bg-surface-container-lowest border border-border-light rounded-[2rem] py-14 px-6 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-primary-fixed/30 flex items-center justify-center mx-auto mb-5">
+            <IconReceipt size={32} className="text-primary" />
+          </div>
+          <h4 className="text-base font-semibold text-text-dark mb-1">Belum ada pembayaran</h4>
+          <p className="text-sm text-text-muted max-w-xs mx-auto">Pembayaran akan muncul setelah Anda membuat reservasi</p>
         </div>
       ) : (
         <div className="space-y-4">

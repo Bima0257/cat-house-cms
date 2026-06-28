@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getReservations } from '../../services/reservations';
+import { IconHistory } from '@tabler/icons-react';
 
 const CustomerHistory = () => {
   const { data, isLoading } = useQuery({
@@ -23,11 +24,16 @@ const CustomerHistory = () => {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Riwayat Reservasi</h1>
 
       {isLoading ? (
-        <div className="text-center py-12 text-gray-400">Memuat...</div>
+        <div className="flex items-center justify-center py-16">
+          <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+        </div>
       ) : history.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
-          <div className="text-4xl mb-4">📋</div>
-          <p>Belum ada riwayat reservasi</p>
+        <div className="bg-surface-container-lowest border border-border-light rounded-[2rem] py-14 px-6 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-primary-fixed/30 flex items-center justify-center mx-auto mb-5">
+            <IconHistory size={32} className="text-primary" />
+          </div>
+          <h4 className="text-base font-semibold text-text-dark mb-1">Belum ada riwayat</h4>
+          <p className="text-sm text-text-muted max-w-xs mx-auto">Riwayat reservasi yang selesai akan muncul di sini</p>
         </div>
       ) : (
         <div className="space-y-4">

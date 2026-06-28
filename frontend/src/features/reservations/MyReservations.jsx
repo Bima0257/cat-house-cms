@@ -10,6 +10,7 @@ import { getCats } from '../../services/cats';
 import { getServices } from '../../services/services';
 import { getCages } from '../../services/cages';
 import alert from '../../lib/alert';
+import { IconCalendarMonth, IconSearch } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 const MyReservations = () => {
@@ -380,9 +381,16 @@ const MyReservations = () => {
           </div>
         ))}
         {reservations.length === 0 && (
-          <div className='text-center py-12 text-gray-400'>
-            <div className='text-4xl mb-4'>{debouncedSearch ? '🔍' : '📅'}</div>
-            <p>{debouncedSearch ? `Tidak ada hasil untuk "${debouncedSearch}"` : 'Belum ada reservasi'}</p>
+          <div className="bg-surface-container-lowest border border-border-light rounded-[2rem] py-14 px-6 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-primary-fixed/30 flex items-center justify-center mx-auto mb-5">
+              {debouncedSearch ? <IconSearch size={32} className="text-primary" /> : <IconCalendarMonth size={32} className="text-primary" />}
+            </div>
+            <h4 className="text-base font-semibold text-text-dark mb-1">
+              {debouncedSearch ? 'Tidak ditemukan' : 'Belum ada reservasi'}
+            </h4>
+            <p className="text-sm text-text-muted max-w-xs mx-auto">
+              {debouncedSearch ? `Tidak ada hasil untuk "${debouncedSearch}"` : 'Buat reservasi pertama Anda untuk menitipkan kucing kesayangan'}
+            </p>
           </div>
         )}
       </div>

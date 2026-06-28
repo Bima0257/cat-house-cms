@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getReservations } from '../../services/reservations';
 import { createDailyReport, getDailyReports } from '../../services/dailyReports';
+import { IconClipboardList } from '@tabler/icons-react';
 import alert from '../../lib/alert';
 
 const DailyReports = () => {
@@ -152,9 +153,12 @@ const DailyReports = () => {
           </div>
         ))}
         {reports.length === 0 && !showForm && (
-          <div className="text-center py-12 text-gray-400">
-            <div className="text-4xl mb-4">📝</div>
-            <p>Belum ada laporan harian</p>
+          <div className="bg-surface-container-lowest border border-border-light rounded-[2rem] py-14 px-6 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-primary-fixed/30 flex items-center justify-center mx-auto mb-5">
+              <IconClipboardList size={32} className="text-primary" />
+            </div>
+            <h4 className="text-base font-semibold text-text-dark mb-1">Belum ada laporan harian</h4>
+            <p className="text-sm text-text-muted max-w-xs mx-auto">Laporan harian untuk kucing yang sedang dititipkan akan muncul di sini</p>
           </div>
         )}
       </div>
