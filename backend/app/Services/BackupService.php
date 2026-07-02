@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Services\AuditService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class BackupService
 {
@@ -14,18 +16,29 @@ class BackupService
 
         $db = config('database.connections.mysql');
 
-        $command = sprintf(
-            'mysqldump --host=%s --port=%s --user=%s --password=%s --single-transaction --routines --triggers %s 2>&1',
-            escapeshellarg($db['host']),
-            escapeshellarg($db['port']),
-            escapeshellarg($db['username']),
-            escapeshellarg($db['password']),
-            escapeshellarg($db['database'])
-        );
+        $envVars = [
+            'MYSQL_PWD' => $db['password'],
+        ];
 
-        $output = shell_exec($command);
+        $command = [
+            'mysqldump',
+            '--host=' . $db['host'],
+            '--port=' . $db['port'],
+            '--user=' . $db['username'],
+            '--single-transaction',
+            '--routines',
+            '--triggers',
+            $db['database'],
+        ];
 
-        if ($output === null) {
+        $process = new Process($command);
+        $process->setTimeout(300);
+        $process->setEnv($envVars);
+
+        try {
+            $process->mustRun();
+            $output = $process->getOutput();
+        } catch (ProcessFailedException) {
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal melakukan backup database. Pastikan mysqldump terinstall di server.',
@@ -51,26 +64,36 @@ class BackupService
 
         $db = config('database.connections.mysql');
 
-        $command = sprintf(
-            'mysql --host=%s --port=%s --user=%s --password=%s %s < %s 2>&1',
-            escapeshellarg($db['host']),
-            escapeshellarg($db['port']),
-            escapeshellarg($db['username']),
-            escapeshellarg($db['password']),
-            escapeshellarg($db['database']),
-            escapeshellarg($fullPath)
-        );
+        $envVars = [
+            'MYSQL_PWD' => $db['password'],
+        ];
 
-        set_time_limit(0);
-        $output = shell_exec($command);
-        Storage::delete($path);
+        $command = [
+            'mysql',
+            '--host=' . $db['host'],
+            '--port=' . $db['port'],
+            '--user=' . $db['username'],
+            $db['database'],
+        ];
 
-        if ($output !== null && $output !== '') {
+        $sqlContent = Storage::get($path);
+
+        $process = new Process($command);
+        $process->setTimeout(0);
+        $process->setEnv($envVars);
+        $process->setInput($sqlContent);
+
+        try {
+            $process->mustRun();
+        } catch (ProcessFailedException $e) {
+            Storage::delete($path);
             return response()->json([
                 'success' => false,
-                'message' => 'Restore gagal: ' . substr($output, 0, 500),
+                'message' => 'Restore gagal: ' . substr($e->getProcess()->getErrorOutput(), 0, 500),
             ], 500);
         }
+
+        Storage::delete($path);
 
         app(AuditService::class)->log(
             action: 'backup.restore',

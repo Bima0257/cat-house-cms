@@ -8,6 +8,7 @@ use App\Models\Reservation;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ReservationService
 {
@@ -65,6 +66,10 @@ class ReservationService
     {
         $reservation = $this->findById($id);
 
+        if (!auth()->user()->can('reservations.update-status') && $reservation->user_id !== auth()->id()) {
+            throw new AccessDeniedHttpException('Anda tidak memiliki akses untuk mengubah status reservasi ini');
+        }
+
         $allowed = self::ALLOWED_TRANSITIONS[$reservation->status] ?? [];
         if (!in_array($status, $allowed)) {
             abort(422, "Tidak dapat mengubah status dari '{$reservation->status}' ke '{$status}'");
@@ -105,6 +110,11 @@ class ReservationService
     public function delete(int $id): void
     {
         $reservation = $this->findById($id);
+
+        if (!auth()->user()->can('reservations.update-status') && $reservation->user_id !== auth()->id()) {
+            throw new AccessDeniedHttpException('Anda tidak memiliki akses untuk menghapus reservasi ini');
+        }
+
         Cage::where('id', $reservation->cage_id)->update(['status' => 'tersedia']);
         $reservation->delete();
     }

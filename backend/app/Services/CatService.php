@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Cat;
 use App\Traits\ImageUpload;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class CatService
 {
@@ -40,6 +41,10 @@ class CatService
     {
         $cat = $this->findById($id);
 
+        if (!auth()->user()->can('cats.index') && $cat->user_id !== auth()->id()) {
+            throw new AccessDeniedHttpException('Anda tidak memiliki akses untuk mengubah kucing ini');
+        }
+
         if (isset($data['photo'])) {
             $this->deleteImage($cat->photo);
             $data['photo'] = $this->uploadImage($data['photo'], 'cats');
@@ -53,6 +58,11 @@ class CatService
     public function delete(int $id): void
     {
         $cat = $this->findById($id);
+
+        if (!auth()->user()->can('cats.index') && $cat->user_id !== auth()->id()) {
+            throw new AccessDeniedHttpException('Anda tidak memiliki akses untuk menghapus kucing ini');
+        }
+
         $this->deleteImage($cat->photo);
         $cat->delete();
     }

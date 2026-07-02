@@ -43,7 +43,7 @@ class AuthService
         $roles = $user->getRoleNames();
 
         if ($roles->contains('user') && ! $user->email_verified_at) {
-            $otp = rand(100000, 999999);
+            $otp = random_int(100000, 999999);
             $user->update([
                 'verification_code' => $otp,
                 'verification_expires_at' => now()->addMinutes(2),
@@ -78,7 +78,17 @@ class AuthService
 
     public function register(array $data)
     {
-        $otp = rand(100000, 999999);
+        $key = 'register:' . request()->ip();
+
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            $seconds = RateLimiter::availableIn($key);
+            throw new \Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException(
+                null,
+                'Terlalu banyak percobaan registrasi. Silakan coba lagi dalam ' . ceil($seconds / 60) . ' menit.'
+            );
+        }
+
+        $otp = random_int(100000, 999999);
 
         $user = User::create([
             'name' => $data['name'],
@@ -89,6 +99,8 @@ class AuthService
         ]);
 
         $user->assignRole('user');
+
+        RateLimiter::clear($key);
 
         Mail::to($user->email)->send(new VerifyEmailCode($otp, $user->name));
 
@@ -112,17 +124,27 @@ class AuthService
 
     public function resendCode(string $email)
     {
+        $key = 'resend-code:' . $email . '|' . request()->ip();
+
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            $seconds = RateLimiter::availableIn($key);
+            throw new \Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException(
+                null,
+                'Terlalu banyak permintaan kode. Silakan coba lagi dalam ' . ceil($seconds / 60) . ' menit.'
+            );
+        }
+
         $user = User::where('email', $email)->first();
 
         if (! $user) {
-            throw new \Exception('User tidak ditemukan');
+            throw new \Exception('Jika email terdaftar, kode verifikasi akan dikirim.');
         }
 
         if ($user->email_verified_at) {
             throw new \Exception('Email sudah terverifikasi');
         }
 
-        $otp = rand(100000, 999999);
+        $otp = random_int(100000, 999999);
 
         $user->update([
             'verification_code' => $otp,
@@ -130,6 +152,8 @@ class AuthService
         ]);
 
         Mail::to($user->email)->send(new VerifyEmailCode($otp, $user->name));
+
+        RateLimiter::clear($key);
 
         return [
             'verification_expires_at' => $user->fresh()->verification_expires_at->toIso8601String(),
@@ -175,6 +199,13 @@ class AuthService
 
     public function sendResetLink(string $email)
     {
+        $key = 'forgot-password:' . $email . '|' . request()->ip();
+
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            $seconds = RateLimiter::availableIn($key);
+            return ['message' => 'Terlalu banyak permintaan. Silakan coba lagi dalam ' . ceil($seconds / 60) . ' menit.'];
+        }
+
         $user = User::where('email', $email)->first();
 
         if (! $user) {
@@ -192,6 +223,8 @@ class AuthService
         $resetLink = rtrim($frontendUrl, '/') . '/reset-password?token=' . $token . '&email=' . urlencode($email);
 
         Mail::to($email)->send(new SendResetLink($resetLink, $user->name));
+
+        RateLimiter::clear($key);
 
         return ['message' => 'Tautan reset password telah dikirim ke email Anda.'];
     }

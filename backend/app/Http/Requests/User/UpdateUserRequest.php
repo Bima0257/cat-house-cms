@@ -19,7 +19,12 @@ class UpdateUserRequest extends FormRequest
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,'.$userId,
             'phone' => 'nullable|string|max:20',
-            'password' => 'nullable|string|min:6',
+            'password' => [
+                'nullable',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/',
+            ],
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'role' => 'nullable|string|exists:roles,name',
         ];
